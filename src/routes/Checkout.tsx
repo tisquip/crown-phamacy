@@ -30,6 +30,7 @@ function RouteComponent() {
     totalPriceCents,
     isLoading: cartLoading,
     isAuthenticated,
+    refreshCart,
   } = useCart();
   const { client, isLoggedIn, userProfile } = useAuth();
   const navigate = useNavigate();
@@ -392,6 +393,8 @@ function RouteComponent() {
       });
 
       setPaymentOrderId(orderId);
+      // Cart was cleared server-side by placeOrder — sync local state
+      void refreshCart();
 
       // 2. Create a payment transaction
       const txId = await createPaymentTx({

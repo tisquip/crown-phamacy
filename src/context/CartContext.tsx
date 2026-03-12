@@ -56,6 +56,8 @@ interface CartContextType {
   items: ConvexCartItem[];
   /** Whether the cart data is still loading */
   isLoading: boolean;
+  /** Manually re-fetch cart from Convex (e.g. after placeOrder clears it server-side) */
+  refreshCart: () => Promise<void>;
   /** Add product to cart (Convex mutation) */
   addToCart: (productId: Id<"products">) => void;
   /** Add product to cart with an exact quantity — used by reorder (skips prescription-controlled for non-admins) */
@@ -221,6 +223,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         items: convexItems,
         isLoading: isLoadingState,
+        refreshCart,
         addToCart,
         addToCartWithQuantity,
         removeFromCart,
