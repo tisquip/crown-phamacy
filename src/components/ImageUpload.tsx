@@ -120,6 +120,7 @@ export function ImageUpload({
           ref={inputRef}
           type="file"
           accept="image/*"
+          capture="environment"
           aria-label="Upload image file"
           className="hidden"
           onChange={handleFileChange}

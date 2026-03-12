@@ -1,4 +1,8 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Outlet,
+  createRootRoute,
+  useRouterState,
+} from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +21,9 @@ export const Route = createRootRoute({
 const queryClient = new QueryClient();
 
 function RootComponent() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = pathname.startsWith("/admin");
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
@@ -25,7 +32,7 @@ function RootComponent() {
             <Toaster />
             <Sonner />
             <ScrollToTop />
-            <WhatsAppButton />
+            {!isAdmin && <WhatsAppButton />}
             <Outlet />
           </TooltipProvider>
         </CartProvider>

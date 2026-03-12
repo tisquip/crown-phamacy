@@ -84,6 +84,7 @@ function RouteComponent() {
 
   const prevPendingCount = useRef<number | null>(null);
   const [showPendingAlert, setShowPendingAlert] = useState(false);
+  const alertAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!dashboard) return;
@@ -96,6 +97,29 @@ function RouteComponent() {
     }
     prevPendingCount.current = current;
   }, [dashboard]);
+
+  useEffect(() => {
+    if (showPendingAlert) {
+      const audio = new Audio("/alert.mp3");
+      audio.loop = true;
+      audio.play().catch(() => {
+        /* autoplay blocked – user will see the visual alert */
+      });
+      alertAudioRef.current = audio;
+    } else {
+      if (alertAudioRef.current) {
+        alertAudioRef.current.pause();
+        alertAudioRef.current.currentTime = 0;
+        alertAudioRef.current = null;
+      }
+    }
+    return () => {
+      if (alertAudioRef.current) {
+        alertAudioRef.current.pause();
+        alertAudioRef.current = null;
+      }
+    };
+  }, [showPendingAlert]);
 
   if (!dashboard) {
     return (
