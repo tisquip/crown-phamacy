@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/Brands")({
   component: RouteComponent,
@@ -222,90 +223,159 @@ function RouteComponent() {
         />
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[120px] text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {brands === undefined ? (
-              <TableRow>
-                <TableCell
-                  colSpan={3}
-                  className="text-center text-muted-foreground py-8"
+      <AdminDataView
+        items={filteredBrands}
+        keyExtractor={(brand) => brand._id}
+        isLoading={brands === undefined}
+        loadingState={
+          <div className="text-center text-muted-foreground py-8">
+            Loading...
+          </div>
+        }
+        emptyState={
+          <div className="text-center text-muted-foreground py-8">
+            {debouncedSearch
+              ? "No brands match your search."
+              : "No brands yet. Add one to get started."}
+          </div>
+        }
+        renderCard={(brand) => (
+          <div
+            className={`bg-card border border-border rounded-lg p-4 space-y-3 ${brand.isDeleted ? "opacity-50" : ""}`}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium text-sm">{brand.name}</h3>
+              {brand.isDeleted ? (
+                <Badge variant="destructive">Deleted</Badge>
+              ) : (
+                <Badge variant="secondary">Active</Badge>
+              )}
+            </div>
+            <div className="flex items-center justify-end gap-1 pt-2 border-t border-border">
+              {brand.isDeleted ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleRestore(brand)}
+                  title="Restore"
                 >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : filteredBrands.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={3}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  {debouncedSearch
-                    ? "No brands match your search."
-                    : "No brands yet. Add one to get started."}
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredBrands.map((brand) => (
-                <TableRow
-                  key={brand._id}
-                  className={brand.isDeleted ? "opacity-50" : ""}
-                >
-                  <TableCell className="font-medium">{brand.name}</TableCell>
-                  <TableCell>
-                    {brand.isDeleted ? (
-                      <Badge variant="destructive">Deleted</Badge>
-                    ) : (
-                      <Badge variant="secondary">Active</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      {brand.isDeleted ? (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRestore(brand)}
-                          title="Restore"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                        </Button>
-                      ) : (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(brand)}
-                            title="Edit"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeleteItem(brand)}
-                            title="Delete"
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
+                  <RotateCcw className="w-4 h-4" />
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEdit(brand)}
+                    title="Edit"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setDeleteItem(brand)}
+                    title="Delete"
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+        renderTable={() => (
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-[120px] text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {brands === undefined ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredBrands.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      {debouncedSearch
+                        ? "No brands match your search."
+                        : "No brands yet. Add one to get started."}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredBrands.map((brand) => (
+                    <TableRow
+                      key={brand._id}
+                      className={brand.isDeleted ? "opacity-50" : ""}
+                    >
+                      <TableCell className="font-medium">
+                        {brand.name}
+                      </TableCell>
+                      <TableCell>
+                        {brand.isDeleted ? (
+                          <Badge variant="destructive">Deleted</Badge>
+                        ) : (
+                          <Badge variant="secondary">Active</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          {brand.isDeleted ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRestore(brand)}
+                              title="Restore"
+                            >
+                              <RotateCcw className="w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleEdit(brand)}
+                                title="Edit"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setDeleteItem(brand)}
+                                title="Delete"
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      />
 
       <BrandFormDialog
         open={dialogOpen}

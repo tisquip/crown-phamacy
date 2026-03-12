@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/Branches")({
   component: RouteComponent,
@@ -330,80 +331,137 @@ function RouteComponent() {
         />
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>City</TableHead>
-              <TableHead>Cell</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[100px] text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {branches === undefined ? (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  Loading…
-                </TableCell>
-              </TableRow>
-            ) : filteredBranches.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  {debouncedSearch
-                    ? "No branches match your search."
-                    : "No branches yet. Add one to get started."}
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredBranches.map((branch) => (
-                <TableRow key={branch._id}>
-                  <TableCell className="font-medium">{branch.name}</TableCell>
-                  <TableCell>{branch.city}</TableCell>
-                  <TableCell>{branch.cell || "—"}</TableCell>
-                  <TableCell>{branch.email || "—"}</TableCell>
-                  <TableCell>
-                    {branch.comingSoon ? (
-                      <Badge variant="outline">Coming Soon</Badge>
-                    ) : (
-                      <Badge variant="secondary">Active</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEdit(branch)}
-                        title="Edit"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setDeleteItem(branch)}
-                        title="Delete"
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+      <AdminDataView
+        items={filteredBranches}
+        keyExtractor={(branch) => branch._id}
+        isLoading={branches === undefined}
+        loadingState={
+          <div className="text-center text-muted-foreground py-8">Loading…</div>
+        }
+        emptyState={
+          <div className="text-center text-muted-foreground py-8">
+            {debouncedSearch
+              ? "No branches match your search."
+              : "No branches yet. Add one to get started."}
+          </div>
+        }
+        renderCard={(branch) => (
+          <div className="bg-card border border-border rounded-lg p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium text-sm">{branch.name}</h3>
+              {branch.comingSoon ? (
+                <Badge variant="outline">Coming Soon</Badge>
+              ) : (
+                <Badge variant="secondary">Active</Badge>
+              )}
+            </div>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p>{branch.city}</p>
+              <p>{branch.cell || "—"}</p>
+              <p>{branch.email || "—"}</p>
+            </div>
+            <div className="flex items-center justify-end gap-1 pt-2 border-t border-border">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleEdit(branch)}
+                title="Edit"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setDeleteItem(branch)}
+                title="Delete"
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+        renderTable={() => (
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>City</TableHead>
+                  <TableHead>Cell</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-[100px] text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {branches === undefined ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={6}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      Loading…
+                    </TableCell>
+                  </TableRow>
+                ) : filteredBranches.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={6}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      {debouncedSearch
+                        ? "No branches match your search."
+                        : "No branches yet. Add one to get started."}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredBranches.map((branch) => (
+                    <TableRow key={branch._id}>
+                      <TableCell className="font-medium">
+                        {branch.name}
+                      </TableCell>
+                      <TableCell>{branch.city}</TableCell>
+                      <TableCell>{branch.cell || "—"}</TableCell>
+                      <TableCell>{branch.email || "—"}</TableCell>
+                      <TableCell>
+                        {branch.comingSoon ? (
+                          <Badge variant="outline">Coming Soon</Badge>
+                        ) : (
+                          <Badge variant="secondary">Active</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleEdit(branch)}
+                            title="Edit"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeleteItem(branch)}
+                            title="Delete"
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      />
 
       <BranchFormDialog
         open={dialogOpen}

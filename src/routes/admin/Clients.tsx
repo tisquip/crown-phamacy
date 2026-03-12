@@ -17,6 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Search, Users, ChevronDown, UserCircle2 } from "lucide-react";
 import { format } from "date-fns";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/Clients")({
   component: RouteComponent,
@@ -171,43 +172,94 @@ function RouteComponent() {
       )}
 
       {!isLoading && displayedProfiles.length > 0 && (
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name &amp; Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead className="text-center">Addresses</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {displayedProfiles.map((profile) => (
-                <ClientRow
-                  key={profile._id}
-                  profile={
-                    profile as typeof profile & {
-                      _id: string;
-                      _creationTime: number;
-                      userId: Id<"users">;
-                      name?: string;
-                      isAdmin?: boolean;
-                      addresses?: string[];
-                      email?: string | null;
-                      phoneNumber?: string | null;
-                    }
-                  }
-                  onClick={() =>
-                    navigate({
-                      to: "/admin/Client/$id",
-                      params: { id: profile.userId },
-                    })
-                  }
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <AdminDataView
+          items={displayedProfiles}
+          keyExtractor={(profile) => profile._id}
+          renderCard={(profile) => (
+            <div
+              className="bg-card border border-border rounded-lg p-4 space-y-3 cursor-pointer hover:bg-muted/50 transition-colors"
+              onClick={() =>
+                navigate({
+                  to: "/admin/Client/$id",
+                  params: { id: profile.userId },
+                })
+              }
+            >
+              <div className="flex items-center gap-2">
+                <UserCircle2 className="w-5 h-5 text-muted-foreground shrink-0" />
+                <div className="flex flex-col min-w-0">
+                  <span className="font-medium text-foreground text-sm truncate">
+                    {profile.name ?? (
+                      <span className="italic text-muted-foreground">
+                        No name
+                      </span>
+                    )}
+                  </span>
+                  {profile.email && (
+                    <span className="text-xs text-muted-foreground truncate">
+                      {profile.email}
+                    </span>
+                  )}
+                </div>
+                {profile.isAdmin && (
+                  <Badge
+                    variant="secondary"
+                    className="text-[10px] px-1 py-0 ml-auto"
+                  >
+                    Admin
+                  </Badge>
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground space-y-1">
+                <p>Phone: {profile.phoneNumber ?? "\u2013"}</p>
+                <p>
+                  Joined:{" "}
+                  {format(new Date(profile._creationTime), "dd MMM yyyy")}
+                </p>
+                <p>Addresses: {profile.addresses?.length ?? 0}</p>
+              </div>
+            </div>
+          )}
+          renderTable={() => (
+            <div className="bg-card border border-border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name &amp; Email</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Joined</TableHead>
+                    <TableHead className="text-center">Addresses</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {displayedProfiles.map((profile) => (
+                    <ClientRow
+                      key={profile._id}
+                      profile={
+                        profile as typeof profile & {
+                          _id: string;
+                          _creationTime: number;
+                          userId: Id<"users">;
+                          name?: string;
+                          isAdmin?: boolean;
+                          addresses?: string[];
+                          email?: string | null;
+                          phoneNumber?: string | null;
+                        }
+                      }
+                      onClick={() =>
+                        navigate({
+                          to: "/admin/Client/$id",
+                          params: { id: profile.userId },
+                        })
+                      }
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        />
       )}
 
       {/* Load more (only in browse / non-search mode) */}

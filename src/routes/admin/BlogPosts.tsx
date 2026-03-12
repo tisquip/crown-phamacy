@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2, RotateCcw, Eye } from "lucide-react";
 import { toast } from "sonner";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/BlogPosts")({
   component: RouteComponent,
@@ -113,125 +114,223 @@ function RouteComponent() {
         />
       </div>
 
-      {/* Posts Table */}
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Image</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Author</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Published</TableHead>
-              <TableHead className="w-[160px] text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {posts === undefined ? (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center text-muted-foreground py-8"
+      {/* Posts Table / Grid */}
+      <AdminDataView
+        items={filteredPosts}
+        keyExtractor={(post) => post._id}
+        isLoading={posts === undefined}
+        loadingState={
+          <div className="text-center text-muted-foreground py-8">
+            Loading...
+          </div>
+        }
+        emptyState={
+          <div className="text-center text-muted-foreground py-8">
+            {debouncedSearch
+              ? "No posts match your search."
+              : "No blog posts yet. Create your first post!"}
+          </div>
+        }
+        renderCard={(post) => (
+          <div
+            className={`bg-card border border-border rounded-lg p-4 space-y-3 ${post.isDeleted ? "opacity-50" : ""}`}
+          >
+            <StorageImage
+              storageId={post.storageIdImage}
+              alt={post.title}
+              className="w-full h-32 rounded object-cover"
+            />
+            <div>
+              <h3 className="font-medium text-sm truncate">{post.title}</h3>
+              <p className="text-xs text-muted-foreground">
+                {post.authorName ?? "Unknown"}
+              </p>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                {post.isDeleted ? (
+                  <Badge variant="destructive">Deleted</Badge>
+                ) : post.isPublished ? (
+                  <Badge className="bg-green-600">Published</Badge>
+                ) : (
+                  <Badge variant="secondary">Draft</Badge>
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground">
+                {post.publishedAt
+                  ? new Date(post.publishedAt).toLocaleDateString()
+                  : "—"}
+              </span>
+            </div>
+            <div className="flex items-center justify-end gap-1 pt-1 border-t border-border">
+              {post.isDeleted ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleRestore(post._id)}
+                  title="Restore"
                 >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : filteredPosts.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  {debouncedSearch
-                    ? "No posts match your search."
-                    : "No blog posts yet. Create your first post!"}
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredPosts.map((post) => (
-                <TableRow
-                  key={post._id}
-                  className={post.isDeleted ? "opacity-50" : ""}
-                >
-                  <TableCell>
-                    <StorageImage
-                      storageId={post.storageIdImage}
-                      alt={post.title}
-                      className="w-14 h-10 rounded object-cover"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium max-w-[200px] truncate">
-                    {post.title}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {post.authorName ?? "Unknown"}
-                  </TableCell>
-                  <TableCell>
-                    {post.isDeleted ? (
-                      <Badge variant="destructive">Deleted</Badge>
-                    ) : post.isPublished ? (
-                      <Badge className="bg-green-600">Published</Badge>
-                    ) : (
-                      <Badge variant="secondary">Draft</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {post.publishedAt
-                      ? new Date(post.publishedAt).toLocaleDateString()
-                      : "—"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      {post.isDeleted ? (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRestore(post._id)}
-                          title="Restore"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                        </Button>
-                      ) : (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setPreviewPost(post)}
-                            title="Preview"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() =>
-                              navigate({
-                                to: "/admin/BlogPost/$id",
-                                params: { id: post._id },
-                              })
-                            }
-                            title="Edit"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeleteId(post._id)}
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4 text-destructive" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
+                  <RotateCcw className="w-4 h-4" />
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setPreviewPost(post)}
+                    title="Preview"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      navigate({
+                        to: "/admin/BlogPost/$id",
+                        params: { id: post._id },
+                      })
+                    }
+                    title="Edit"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setDeleteId(post._id)}
+                    title="Delete"
+                  >
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+        renderTable={() => (
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Image</TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Author</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Published</TableHead>
+                  <TableHead className="w-[160px] text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {posts === undefined ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={6}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredPosts.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={6}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      {debouncedSearch
+                        ? "No posts match your search."
+                        : "No blog posts yet. Create your first post!"}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredPosts.map((post) => (
+                    <TableRow
+                      key={post._id}
+                      className={post.isDeleted ? "opacity-50" : ""}
+                    >
+                      <TableCell>
+                        <StorageImage
+                          storageId={post.storageIdImage}
+                          alt={post.title}
+                          className="w-14 h-10 rounded object-cover"
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium max-w-[200px] truncate">
+                        {post.title}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {post.authorName ?? "Unknown"}
+                      </TableCell>
+                      <TableCell>
+                        {post.isDeleted ? (
+                          <Badge variant="destructive">Deleted</Badge>
+                        ) : post.isPublished ? (
+                          <Badge className="bg-green-600">Published</Badge>
+                        ) : (
+                          <Badge variant="secondary">Draft</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground">
+                        {post.publishedAt
+                          ? new Date(post.publishedAt).toLocaleDateString()
+                          : "—"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          {post.isDeleted ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRestore(post._id)}
+                              title="Restore"
+                            >
+                              <RotateCcw className="w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setPreviewPost(post)}
+                                title="Preview"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() =>
+                                  navigate({
+                                    to: "/admin/BlogPost/$id",
+                                    params: { id: post._id },
+                                  })
+                                }
+                                title="Edit"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setDeleteId(post._id)}
+                                title="Delete"
+                              >
+                                <Trash2 className="w-4 h-4 text-destructive" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      />
 
       {/* Preview Sheet */}
       <Sheet open={!!previewPost} onOpenChange={() => setPreviewPost(null)}>

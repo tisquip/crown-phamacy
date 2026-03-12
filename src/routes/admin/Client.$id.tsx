@@ -63,6 +63,7 @@ import {
   FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/Client/$id")({
   component: RouteComponent,
@@ -490,74 +491,128 @@ function RouteComponent() {
             )}
             {!isReceiptsLoading && receipts.length > 0 && (
               <>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead className="text-center">Items</TableHead>
-                      <TableHead>Rx?</TableHead>
-                      <TableHead className="text-right">Total</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {receipts.map((r) => {
-                      const receipt = r as typeof r & {
-                        _id: Id<"order">;
-                        _creationTime: number;
-                        productIds: Array<Id<"products">>;
-                        uploadedPrescriptionIds?: Array<
-                          Id<"uploadedPrescription">
-                        >;
-                        totalInUSDCents: number;
-                      };
-                      const hasPrescription =
-                        (receipt.uploadedPrescriptionIds ?? []).length > 0;
-                      return (
-                        <TableRow
-                          key={receipt._id}
-                          className="cursor-pointer hover:bg-muted/50"
-                          onClick={() =>
-                            navigate({
-                              to: "/admin/Order/$id",
-                              params: { id: receipt._id },
-                            })
-                          }
-                        >
-                          <TableCell className="font-mono text-xs text-muted-foreground">
+                <AdminDataView
+                  items={receipts}
+                  keyExtractor={(r) => r._id}
+                  renderCard={(r) => {
+                    const receipt = r as typeof r & {
+                      _id: Id<"order">;
+                      _creationTime: number;
+                      productIds: Array<Id<"products">>;
+                      uploadedPrescriptionIds?: Array<
+                        Id<"uploadedPrescription">
+                      >;
+                      totalInUSDCents: number;
+                    };
+                    const hasPrescription =
+                      (receipt.uploadedPrescriptionIds ?? []).length > 0;
+                    return (
+                      <div
+                        className="bg-card border border-border rounded-lg p-4 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                        onClick={() =>
+                          navigate({
+                            to: "/admin/Order/$id",
+                            params: { id: receipt._id },
+                          })
+                        }
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-xs text-muted-foreground">
                             {receipt._id.slice(-8).toUpperCase()}
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <CalendarClock className="w-3.5 h-3.5" />
-                              {format(
-                                new Date(receipt._creationTime),
-                                "dd MMM yyyy, HH:mm",
-                              )}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-center text-foreground">
-                            {receipt.productIds?.length ?? 0}
-                          </TableCell>
-                          <TableCell>
-                            {hasPrescription ? (
-                              <span className="inline-flex items-center gap-1 text-xs text-primary">
-                                <FileText className="w-3 h-3" /> Yes
-                              </span>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">
-                                —
-                              </span>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right font-semibold price-text text-sm">
+                          </span>
+                          <span className="font-semibold text-sm price-text">
                             {formatPrice(receipt.totalInUSDCents)}
-                          </TableCell>
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <CalendarClock className="w-3.5 h-3.5" />
+                          {format(
+                            new Date(receipt._creationTime),
+                            "dd MMM yyyy, HH:mm",
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>{receipt.productIds?.length ?? 0} items</span>
+                          {hasPrescription && (
+                            <span className="inline-flex items-center gap-1 text-primary">
+                              <FileText className="w-3 h-3" /> Rx
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }}
+                  renderTable={() => (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Order ID</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead className="text-center">Items</TableHead>
+                          <TableHead>Rx?</TableHead>
+                          <TableHead className="text-right">Total</TableHead>
                         </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {receipts.map((r) => {
+                          const receipt = r as typeof r & {
+                            _id: Id<"order">;
+                            _creationTime: number;
+                            productIds: Array<Id<"products">>;
+                            uploadedPrescriptionIds?: Array<
+                              Id<"uploadedPrescription">
+                            >;
+                            totalInUSDCents: number;
+                          };
+                          const hasPrescription =
+                            (receipt.uploadedPrescriptionIds ?? []).length > 0;
+                          return (
+                            <TableRow
+                              key={receipt._id}
+                              className="cursor-pointer hover:bg-muted/50"
+                              onClick={() =>
+                                navigate({
+                                  to: "/admin/Order/$id",
+                                  params: { id: receipt._id },
+                                })
+                              }
+                            >
+                              <TableCell className="font-mono text-xs text-muted-foreground">
+                                {receipt._id.slice(-8).toUpperCase()}
+                              </TableCell>
+                              <TableCell className="text-sm text-muted-foreground">
+                                <span className="flex items-center gap-1">
+                                  <CalendarClock className="w-3.5 h-3.5" />
+                                  {format(
+                                    new Date(receipt._creationTime),
+                                    "dd MMM yyyy, HH:mm",
+                                  )}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-center text-foreground">
+                                {receipt.productIds?.length ?? 0}
+                              </TableCell>
+                              <TableCell>
+                                {hasPrescription ? (
+                                  <span className="inline-flex items-center gap-1 text-xs text-primary">
+                                    <FileText className="w-3 h-3" /> Yes
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground">
+                                    —
+                                  </span>
+                                )}
+                              </TableCell>
+                              <TableCell className="text-right font-semibold price-text text-sm">
+                                {formatPrice(receipt.totalInUSDCents)}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  )}
+                />
 
                 {receiptsStatus === "CanLoadMore" && (
                   <div className="flex justify-center mt-4">

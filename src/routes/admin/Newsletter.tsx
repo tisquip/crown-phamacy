@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Download, Mail } from "lucide-react";
 import { format } from "date-fns";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/Newsletter")({
   component: RouteComponent,
@@ -65,50 +66,86 @@ function RouteComponent() {
           </Button>
         </div>
 
-        <div className="rounded-md border bg-card">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>#</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Subscribed At</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {subscribers === undefined ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={3}
-                    className="text-center py-10 text-muted-foreground"
-                  >
-                    Loading…
-                  </TableCell>
-                </TableRow>
-              ) : subscribers.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={3}
-                    className="text-center py-10 text-muted-foreground"
-                  >
-                    No subscribers yet.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                subscribers.map((s, idx) => (
-                  <TableRow key={s._id}>
-                    <TableCell className="text-muted-foreground">
-                      {idx + 1}
-                    </TableCell>
-                    <TableCell className="font-medium">{s.email}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {format(new Date(s._creationTime), "d MMM yyyy, HH:mm")}
-                    </TableCell>
+        <AdminDataView
+          items={subscribers ?? []}
+          keyExtractor={(s) => s._id}
+          isLoading={subscribers === undefined}
+          loadingState={
+            <div className="text-center py-10 text-muted-foreground">
+              Loading…
+            </div>
+          }
+          emptyState={
+            <div className="text-center py-10 text-muted-foreground">
+              No subscribers yet.
+            </div>
+          }
+          renderCard={(s) => {
+            const idx = (subscribers ?? []).indexOf(s);
+            return (
+              <div className="bg-card border border-border rounded-lg p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    #{idx + 1}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {format(new Date(s._creationTime), "d MMM yyyy, HH:mm")}
+                  </span>
+                </div>
+                <p className="font-medium text-sm">{s.email}</p>
+              </div>
+            );
+          }}
+          renderTable={() => (
+            <div className="rounded-md border bg-card">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>#</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Subscribed At</TableHead>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                </TableHeader>
+                <TableBody>
+                  {subscribers === undefined ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={3}
+                        className="text-center py-10 text-muted-foreground"
+                      >
+                        Loading…
+                      </TableCell>
+                    </TableRow>
+                  ) : subscribers.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={3}
+                        className="text-center py-10 text-muted-foreground"
+                      >
+                        No subscribers yet.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    subscribers.map((s, idx) => (
+                      <TableRow key={s._id}>
+                        <TableCell className="text-muted-foreground">
+                          {idx + 1}
+                        </TableCell>
+                        <TableCell className="font-medium">{s.email}</TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {format(
+                            new Date(s._creationTime),
+                            "d MMM yyyy, HH:mm",
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        />
       </div>
     </AdminLayout>
   );

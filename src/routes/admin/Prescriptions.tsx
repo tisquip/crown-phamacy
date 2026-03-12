@@ -24,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { FileText, Loader2, ChevronDown } from "lucide-react";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/Prescriptions")({
   component: RouteComponent,
@@ -129,82 +130,135 @@ function RouteComponent() {
         </Select>
       </div>
 
-      {/* Table */}
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Client</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>File</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading && (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-10">
-                  <Loader2 className="w-5 h-5 animate-spin mx-auto text-muted-foreground" />
-                </TableCell>
-              </TableRow>
-            )}
-
-            {!isLoading && results.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="text-center py-10 text-muted-foreground text-sm"
-                >
-                  No prescriptions found.
-                </TableCell>
-              </TableRow>
-            )}
-
-            {(results as Array<Doc<"uploadedPrescription">>).map((p) => {
-              const statusInfo =
-                STATUS_BADGE[p.status as PrescriptionStatus] ??
-                STATUS_BADGE["Uploaded"];
-              return (
-                <TableRow
-                  key={p._id}
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() =>
-                    navigate({
-                      to: "/admin/Prescription/$id",
-                      params: { id: p._id },
-                    })
-                  }
-                >
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
-                      <span className="font-mono text-xs text-muted-foreground truncate max-w-[120px]">
-                        {p._id}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {(clientNames as Record<string, string>)[p.clientId] ??
-                      p.clientId}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
-                    {format(new Date(p._creationTime), "dd MMM yyyy")}
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {p.fileName ?? "—"}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={statusInfo.variant}>
-                      {statusInfo.label}
-                    </Badge>
-                  </TableCell>
+      {/* Table / Grid */}
+      <AdminDataView
+        items={results as Array<Doc<"uploadedPrescription">>}
+        keyExtractor={(p) => p._id}
+        isLoading={isLoading}
+        loadingState={
+          <div className="text-center py-10">
+            <Loader2 className="w-5 h-5 animate-spin mx-auto text-muted-foreground" />
+          </div>
+        }
+        emptyState={
+          <div className="text-center py-10 text-muted-foreground text-sm">
+            No prescriptions found.
+          </div>
+        }
+        renderCard={(p) => {
+          const statusInfo =
+            STATUS_BADGE[p.status as PrescriptionStatus] ??
+            STATUS_BADGE["Uploaded"];
+          return (
+            <div
+              className="bg-card border border-border rounded-lg p-4 space-y-3 cursor-pointer hover:bg-muted/50 transition-colors"
+              onClick={() =>
+                navigate({
+                  to: "/admin/Prescription/$id",
+                  params: { id: p._id },
+                })
+              }
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <span className="font-mono text-xs text-muted-foreground truncate max-w-[140px]">
+                    {p._id}
+                  </span>
+                </div>
+                <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
+              </div>
+              <div className="text-sm">
+                <p className="font-medium">
+                  {(clientNames as Record<string, string>)[p.clientId] ??
+                    p.clientId}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {format(new Date(p._creationTime), "dd MMM yyyy")}
+                </p>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                File: {p.fileName ?? "—"}
+              </div>
+            </div>
+          );
+        }}
+        renderTable={() => (
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>File</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {isLoading && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-10">
+                      <Loader2 className="w-5 h-5 animate-spin mx-auto text-muted-foreground" />
+                    </TableCell>
+                  </TableRow>
+                )}
+                {!isLoading && results.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="text-center py-10 text-muted-foreground text-sm"
+                    >
+                      No prescriptions found.
+                    </TableCell>
+                  </TableRow>
+                )}
+                {(results as Array<Doc<"uploadedPrescription">>).map((p) => {
+                  const statusInfo =
+                    STATUS_BADGE[p.status as PrescriptionStatus] ??
+                    STATUS_BADGE["Uploaded"];
+                  return (
+                    <TableRow
+                      key={p._id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() =>
+                        navigate({
+                          to: "/admin/Prescription/$id",
+                          params: { id: p._id },
+                        })
+                      }
+                    >
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
+                          <span className="font-mono text-xs text-muted-foreground truncate max-w-[120px]">
+                            {p._id}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {(clientNames as Record<string, string>)[p.clientId] ??
+                          p.clientId}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                        {format(new Date(p._creationTime), "dd MMM yyyy")}
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground">
+                        {p.fileName ?? "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={statusInfo.variant}>
+                          {statusInfo.label}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      />
 
       {/* Load more */}
       {status === "CanLoadMore" && (

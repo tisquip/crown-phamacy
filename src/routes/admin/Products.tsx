@@ -81,6 +81,7 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 // ── Filter chip ───────────────────────────────────────────────────────────────
 function FilterChip({
@@ -1305,180 +1306,309 @@ function RouteComponent() {
         )}
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Details</TableHead>
-              <TableHead>Pricing</TableHead>
-              <TableHead>Images</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[120px] text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {products === undefined ? (
-              <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="text-center text-muted-foreground py-8"
+      <AdminDataView
+        items={filteredProducts}
+        keyExtractor={(product) => product._id}
+        isLoading={products === undefined}
+        loadingState={
+          <div className="text-center text-muted-foreground py-8">
+            Loading...
+          </div>
+        }
+        emptyState={
+          <div className="text-center text-muted-foreground py-8">
+            {(products ?? []).length === 0
+              ? "No products yet. Add one to get started."
+              : "No products match your search or filters."}
+          </div>
+        }
+        renderCard={(product) => (
+          <div
+            className={`bg-card border border-border rounded-lg p-4 space-y-3 ${product.isDeleted ? "opacity-50" : ""}`}
+          >
+            {/* Image */}
+            <div className="flex gap-2">
+              {product.cdnImages?.length ? (
+                <img
+                  src={product.cdnImages[0].url}
+                  alt="Product"
+                  className="w-16 h-16 rounded-md object-cover border border-border"
+                />
+              ) : product.storageIdsImages?.length ? (
+                <StorageImage
+                  storageId={product.storageIdsImages[0]}
+                  className="w-16 h-16 rounded-md object-cover border border-border"
+                />
+              ) : (
+                <StorageImage
+                  storageId={null}
+                  className="w-16 h-16 rounded-md object-cover border border-border opacity-40"
+                />
+              )}
+              <div className="min-w-0 flex-1">
+                <h3 className="font-medium text-sm truncate">{product.name}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {product.stockCode}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {product.brandId
+                    ? (brandMap.get(product.brandId) ?? "\u2014")
+                    : "\u2014"}
+                </p>
+              </div>
+            </div>
+            {/* Pricing */}
+            <div className="text-sm space-y-0.5">
+              <div>${centsToDollars(product.retailPriceInUSDCents)}</div>
+              {product.promotionPriceInUSDCents ? (
+                <div className="text-xs text-muted-foreground">
+                  Promo: ${centsToDollars(product.promotionPriceInUSDCents)}
+                </div>
+              ) : null}
+              {product.bulkOfferPriceInUSDCents ? (
+                <div className="text-xs text-muted-foreground">
+                  Bulk: ${centsToDollars(product.bulkOfferPriceInUSDCents)}
+                  {product.bulkOfferQty ? ` (min ${product.bulkOfferQty})` : ""}
+                </div>
+              ) : null}
+            </div>
+            {/* Badges */}
+            <div className="flex flex-wrap gap-1">
+              <Badge variant={product.inStock ? "outline" : "secondary"}>
+                {product.inStock ? "In Stock" : "Out of Stock"}
+              </Badge>
+              {product.isDeleted ? (
+                <Badge variant="destructive">Deleted</Badge>
+              ) : (
+                <Badge variant="secondary">Active</Badge>
+              )}
+              {product.isMedicine && (
+                <Badge variant="secondary" className="text-[10px]">
+                  Medicine
+                </Badge>
+              )}
+              {product.isPrescriptionControlled && (
+                <Badge variant="outline" className="text-[10px]">
+                  Rx
+                </Badge>
+              )}
+            </div>
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-1 pt-2 border-t border-border">
+              {product.isDeleted ? (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleRestore(product)}
+                  title="Restore"
                 >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : filteredProducts.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  {products.length === 0
-                    ? "No products yet. Add one to get started."
-                    : "No products match your search or filters."}
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredProducts.map((product) => (
-                <TableRow
-                  key={product._id}
-                  className={product.isDeleted ? "opacity-50" : ""}
-                >
-                  <TableCell className="font-medium max-w-[200px] truncate">
-                    {product.name}
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    <div className="space-y-0.5">
-                      <div>
-                        <span className="font-medium">Brand:</span>{" "}
-                        {product.brandId
-                          ? (brandMap.get(product.brandId) ?? "—")
-                          : "—"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Stock Code:</span>{" "}
-                        {product.stockCode}
-                      </div>
-                      <div>
-                        <span className="font-medium">Barcode:</span>{" "}
-                        {product.barcode ?? "—"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Pack Size:</span>{" "}
-                        {product.packSize ?? "—"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Medication:</span>{" "}
-                        {product.isMedicine ? "Yes" : "No"}
-                      </div>
-                      <div>
-                        <span className="font-medium">Prescribed:</span>{" "}
-                        {product.isPrescriptionControlled ? "Yes" : "No"}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    <div className="space-y-0.5">
-                      <div>
-                        ${centsToDollars(product.retailPriceInUSDCents)}
-                      </div>
-                      {product.promotionPriceInUSDCents ? (
-                        <div className="text-xs text-muted-foreground">
-                          <span className="font-medium">Promo:</span> $
-                          {centsToDollars(product.promotionPriceInUSDCents)}
-                        </div>
-                      ) : null}
-                      {product.bulkOfferPriceInUSDCents ? (
-                        <div className="text-xs text-muted-foreground">
-                          <span className="font-medium">Bulk:</span> $
-                          {centsToDollars(product.bulkOfferPriceInUSDCents)}
-                          {product.bulkOfferQty
-                            ? ` (min ${product.bulkOfferQty})`
-                            : ""}
-                        </div>
-                      ) : null}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {product.cdnImages?.length ||
-                    product.storageIdsImages?.length ? (
-                      <div className="flex flex-wrap gap-1">
-                        {product.cdnImages?.map((img) => (
-                          <img
-                            key={img.key}
-                            src={img.url}
-                            alt="Product"
-                            className="w-10 h-10 rounded-md object-cover border border-border"
-                          />
-                        ))}
-                        {product.storageIdsImages?.map((id) => (
-                          <StorageImage
-                            key={id}
-                            storageId={id}
-                            className="w-10 h-10 rounded-md object-cover border border-border"
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <StorageImage
-                        storageId={null}
-                        className="w-10 h-10 rounded-md object-cover border border-border opacity-40"
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={product.inStock ? "outline" : "secondary"}>
-                      {product.inStock ? "In Stock" : "Out of Stock"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {product.isDeleted ? (
-                      <Badge variant="destructive">Deleted</Badge>
-                    ) : (
-                      <Badge variant="secondary">Active</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      {product.isDeleted ? (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRestore(product)}
-                          title="Restore"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                        </Button>
-                      ) : (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(product)}
-                            title="Edit"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeleteItem(product)}
-                            title="Delete"
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
+                  <RotateCcw className="w-4 h-4" />
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEdit(product)}
+                    title="Edit"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setDeleteItem(product)}
+                    title="Delete"
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+        renderTable={() => (
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Details</TableHead>
+                  <TableHead>Pricing</TableHead>
+                  <TableHead>Images</TableHead>
+                  <TableHead>Stock</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-[120px] text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {products === undefined ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredProducts.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      {products.length === 0
+                        ? "No products yet. Add one to get started."
+                        : "No products match your search or filters."}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredProducts.map((product) => (
+                    <TableRow
+                      key={product._id}
+                      className={product.isDeleted ? "opacity-50" : ""}
+                    >
+                      <TableCell className="font-medium max-w-[200px] truncate">
+                        {product.name}
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground">
+                        <div className="space-y-0.5">
+                          <div>
+                            <span className="font-medium">Brand:</span>{" "}
+                            {product.brandId
+                              ? (brandMap.get(product.brandId) ?? "—")
+                              : "—"}
+                          </div>
+                          <div>
+                            <span className="font-medium">Stock Code:</span>{" "}
+                            {product.stockCode}
+                          </div>
+                          <div>
+                            <span className="font-medium">Barcode:</span>{" "}
+                            {product.barcode ?? "—"}
+                          </div>
+                          <div>
+                            <span className="font-medium">Pack Size:</span>{" "}
+                            {product.packSize ?? "—"}
+                          </div>
+                          <div>
+                            <span className="font-medium">Medication:</span>{" "}
+                            {product.isMedicine ? "Yes" : "No"}
+                          </div>
+                          <div>
+                            <span className="font-medium">Prescribed:</span>{" "}
+                            {product.isPrescriptionControlled ? "Yes" : "No"}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        <div className="space-y-0.5">
+                          <div>
+                            ${centsToDollars(product.retailPriceInUSDCents)}
+                          </div>
+                          {product.promotionPriceInUSDCents ? (
+                            <div className="text-xs text-muted-foreground">
+                              <span className="font-medium">Promo:</span> $
+                              {centsToDollars(product.promotionPriceInUSDCents)}
+                            </div>
+                          ) : null}
+                          {product.bulkOfferPriceInUSDCents ? (
+                            <div className="text-xs text-muted-foreground">
+                              <span className="font-medium">Bulk:</span> $
+                              {centsToDollars(product.bulkOfferPriceInUSDCents)}
+                              {product.bulkOfferQty
+                                ? ` (min ${product.bulkOfferQty})`
+                                : ""}
+                            </div>
+                          ) : null}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {product.cdnImages?.length ||
+                        product.storageIdsImages?.length ? (
+                          <div className="flex flex-wrap gap-1">
+                            {product.cdnImages?.map((img) => (
+                              <img
+                                key={img.key}
+                                src={img.url}
+                                alt="Product"
+                                className="w-10 h-10 rounded-md object-cover border border-border"
+                              />
+                            ))}
+                            {product.storageIdsImages?.map((id) => (
+                              <StorageImage
+                                key={id}
+                                storageId={id}
+                                className="w-10 h-10 rounded-md object-cover border border-border"
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <StorageImage
+                            storageId={null}
+                            className="w-10 h-10 rounded-md object-cover border border-border opacity-40"
+                          />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={product.inStock ? "outline" : "secondary"}
+                        >
+                          {product.inStock ? "In Stock" : "Out of Stock"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {product.isDeleted ? (
+                          <Badge variant="destructive">Deleted</Badge>
+                        ) : (
+                          <Badge variant="secondary">Active</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          {product.isDeleted ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRestore(product)}
+                              title="Restore"
+                            >
+                              <RotateCcw className="w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleEdit(product)}
+                                title="Edit"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setDeleteItem(product)}
+                                title="Delete"
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      />
 
       {/* Result count */}
       {products !== undefined && (

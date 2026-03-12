@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { Loader2, ChevronDown, ShoppingBag, FileText } from "lucide-react";
 import { Id } from "../../../convex/_generated/dataModel";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -75,82 +76,147 @@ function RouteComponent() {
       )}
 
       {!isLoading && results.length > 0 && (
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead>Date &amp; Time</TableHead>
-                <TableHead className="text-center">Items</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Rx?</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead>Delivery</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {results.map((r) => {
-                const receipt = r as typeof r & {
-                  clientName: string;
-                  _id: Id<"order">;
-                };
-                const hasPrescription =
-                  (receipt.uploadedPrescriptionIds ?? []).length > 0;
-                return (
-                  <TableRow
-                    key={receipt._id}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() =>
-                      navigate({
-                        to: "/admin/Order/$id",
-                        params: { id: receipt._id },
-                      })
-                    }
+        <AdminDataView
+          items={results}
+          keyExtractor={(r) => r._id}
+          renderCard={(r) => {
+            const receipt = r as typeof r & {
+              clientName: string;
+              _id: Id<"order">;
+            };
+            const hasPrescription =
+              (receipt.uploadedPrescriptionIds ?? []).length > 0;
+            return (
+              <div
+                className="bg-card border border-border rounded-lg p-4 space-y-3 cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() =>
+                  navigate({
+                    to: "/admin/Order/$id",
+                    params: { id: receipt._id },
+                  })
+                }
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {receipt._id.slice(-8).toUpperCase()}
+                  </span>
+                  <Badge
+                    className={`capitalize text-xs ${statusColors[receipt.status] ?? ""}`}
                   >
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {receipt._id.slice(-8).toUpperCase()}
-                    </TableCell>
-                    <TableCell className="font-medium text-foreground">
-                      {receipt.clientName}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
-                      {format(
-                        new Date(receipt._creationTime),
-                        "dd MMM yyyy, HH:mm",
-                      )}
-                    </TableCell>
-                    <TableCell className="text-center text-foreground">
-                      {receipt.productIds?.length ?? 0}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`capitalize text-xs ${statusColors[receipt.status] ?? ""}`}
-                      >
-                        {receipt.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {hasPrescription ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-primary">
-                          <FileText className="w-3 h-3" /> Yes
-                        </span>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right font-semibold price-text">
-                      {formatPrice(receipt.totalInUSDCents)}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground text-xs">
-                      {receipt.address || "Collection"}
-                    </TableCell>
+                    {receipt.status}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="font-medium text-sm text-foreground">
+                    {receipt.clientName}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {format(
+                      new Date(receipt._creationTime),
+                      "dd MMM yyyy, HH:mm",
+                    )}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{receipt.productIds?.length ?? 0} items</span>
+                  {hasPrescription && (
+                    <span className="inline-flex items-center gap-1 text-primary">
+                      <FileText className="w-3 h-3" /> Rx
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center justify-between border-t border-border pt-2">
+                  <span className="text-xs text-muted-foreground">
+                    {receipt.address || "Collection"}
+                  </span>
+                  <span className="font-semibold text-sm price-text">
+                    {formatPrice(receipt.totalInUSDCents)}
+                  </span>
+                </div>
+              </div>
+            );
+          }}
+          renderTable={() => (
+            <div className="bg-card border border-border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Client</TableHead>
+                    <TableHead>Date &amp; Time</TableHead>
+                    <TableHead className="text-center">Items</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Rx?</TableHead>
+                    <TableHead className="text-right">Total</TableHead>
+                    <TableHead>Delivery</TableHead>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
+                </TableHeader>
+                <TableBody>
+                  {results.map((r) => {
+                    const receipt = r as typeof r & {
+                      clientName: string;
+                      _id: Id<"order">;
+                    };
+                    const hasPrescription =
+                      (receipt.uploadedPrescriptionIds ?? []).length > 0;
+                    return (
+                      <TableRow
+                        key={receipt._id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() =>
+                          navigate({
+                            to: "/admin/Order/$id",
+                            params: { id: receipt._id },
+                          })
+                        }
+                      >
+                        <TableCell className="font-mono text-xs text-muted-foreground">
+                          {receipt._id.slice(-8).toUpperCase()}
+                        </TableCell>
+                        <TableCell className="font-medium text-foreground">
+                          {receipt.clientName}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground text-sm">
+                          {format(
+                            new Date(receipt._creationTime),
+                            "dd MMM yyyy, HH:mm",
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center text-foreground">
+                          {receipt.productIds?.length ?? 0}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            className={`capitalize text-xs ${statusColors[receipt.status] ?? ""}`}
+                          >
+                            {receipt.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {hasPrescription ? (
+                            <span className="inline-flex items-center gap-1 text-xs text-primary">
+                              <FileText className="w-3 h-3" /> Yes
+                            </span>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">
+                              —
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right font-semibold price-text">
+                          {formatPrice(receipt.totalInUSDCents)}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground text-xs">
+                          {receipt.address || "Collection"}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        />
       )}
 
       {/* Load more */}

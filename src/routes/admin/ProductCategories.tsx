@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Pencil, Trash2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/ProductCategories")({
   component: RouteComponent,
@@ -301,103 +302,183 @@ function RouteComponent() {
         />
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-16">Image</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[120px] text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {categories === undefined ? (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : filteredCategories.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  {debouncedSearch
-                    ? "No categories match your search."
-                    : "No categories yet. Add one to get started."}
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredCategories.map((cat) => (
-                <TableRow
-                  key={cat._id}
-                  className={cat.isDeleted ? "opacity-50" : ""}
-                >
-                  <TableCell>
-                    <StorageImage
-                      storageId={cat.storageIdImage}
-                      cdnUrl={cat.cdnImageUrl}
-                      alt={cat.name}
-                      className="w-10 h-10 rounded-md object-cover border border-border"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{cat.name}</TableCell>
-                  <TableCell className="text-muted-foreground max-w-xs truncate">
-                    {cat.description ?? "—"}
-                  </TableCell>
-                  <TableCell>
-                    {cat.isDeleted ? (
-                      <Badge variant="destructive">Deleted</Badge>
-                    ) : (
-                      <Badge variant="secondary">Active</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      {cat.isDeleted ? (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRestore(cat)}
-                          title="Restore"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                        </Button>
-                      ) : (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(cat)}
-                            title="Edit"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeleteItem(cat)}
-                            title="Delete"
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
+      <AdminDataView
+        items={filteredCategories}
+        keyExtractor={(cat) => cat._id}
+        isLoading={categories === undefined}
+        loadingState={
+          <div className="text-center text-muted-foreground py-8">
+            Loading...
+          </div>
+        }
+        emptyState={
+          <div className="text-center text-muted-foreground py-8">
+            {debouncedSearch
+              ? "No categories match your search."
+              : "No categories yet. Add one to get started."}
+          </div>
+        }
+        renderCard={(cat) => (
+          <div
+            className={`bg-card border border-border rounded-lg p-4 space-y-3 ${cat.isDeleted ? "opacity-50" : ""}`}
+          >
+            <div className="flex items-center gap-3">
+              <StorageImage
+                storageId={cat.storageIdImage}
+                cdnUrl={cat.cdnImageUrl}
+                alt={cat.name}
+                className="w-12 h-12 rounded-md object-cover border border-border shrink-0"
+              />
+              <div className="min-w-0">
+                <h3 className="font-medium text-sm truncate">{cat.name}</h3>
+                <p className="text-xs text-muted-foreground truncate">
+                  {cat.description ?? "—"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              {cat.isDeleted ? (
+                <Badge variant="destructive">Deleted</Badge>
+              ) : (
+                <Badge variant="secondary">Active</Badge>
+              )}
+              <div className="flex items-center gap-1">
+                {cat.isDeleted ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRestore(cat)}
+                    title="Restore"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEdit(cat)}
+                      title="Edit"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setDeleteItem(cat)}
+                      title="Delete"
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        renderTable={() => (
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16">Image</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-[120px] text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {categories === undefined ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : filteredCategories.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      {debouncedSearch
+                        ? "No categories match your search."
+                        : "No categories yet. Add one to get started."}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredCategories.map((cat) => (
+                    <TableRow
+                      key={cat._id}
+                      className={cat.isDeleted ? "opacity-50" : ""}
+                    >
+                      <TableCell>
+                        <StorageImage
+                          storageId={cat.storageIdImage}
+                          cdnUrl={cat.cdnImageUrl}
+                          alt={cat.name}
+                          className="w-10 h-10 rounded-md object-cover border border-border"
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">{cat.name}</TableCell>
+                      <TableCell className="text-muted-foreground max-w-xs truncate">
+                        {cat.description ?? "—"}
+                      </TableCell>
+                      <TableCell>
+                        {cat.isDeleted ? (
+                          <Badge variant="destructive">Deleted</Badge>
+                        ) : (
+                          <Badge variant="secondary">Active</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          {cat.isDeleted ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRestore(cat)}
+                              title="Restore"
+                            >
+                              <RotateCcw className="w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleEdit(cat)}
+                                title="Edit"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setDeleteItem(cat)}
+                                title="Delete"
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      />
 
       <CategoryFormDialog
         open={dialogOpen}

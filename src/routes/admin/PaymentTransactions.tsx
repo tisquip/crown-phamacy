@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { Loader2, ChevronDown, CreditCard } from "lucide-react";
 import { Id } from "../../../convex/_generated/dataModel";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -71,62 +72,109 @@ function RouteComponent() {
       )}
 
       {!isLoading && results.length > 0 && (
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Transaction ID</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead>Reference</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {results.map((tx: Record<string, any>) => (
-                <TableRow
-                  key={tx._id}
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() =>
-                    navigate({
-                      to: "/admin/Order/$id",
-                      params: { id: tx.orderId },
-                    })
-                  }
+        <AdminDataView
+          items={results}
+          keyExtractor={(tx) => tx._id}
+          renderCard={(tx: Record<string, any>) => (
+            <div
+              className="bg-card border border-border rounded-lg p-4 space-y-3 cursor-pointer hover:bg-muted/50 transition-colors"
+              onClick={() =>
+                navigate({ to: "/admin/Order/$id", params: { id: tx.orderId } })
+              }
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs text-muted-foreground">
+                  {(tx._id as string).slice(-8).toUpperCase()}
+                </span>
+                <Badge
+                  className={`capitalize text-xs ${statusColors[tx.status] ?? ""}`}
                 >
-                  <TableCell className="font-mono text-xs text-muted-foreground">
-                    {(tx._id as string).slice(-8).toUpperCase()}
-                  </TableCell>
-                  <TableCell className="font-medium text-foreground">
-                    {tx.userName}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
-                    {format(new Date(tx._creationTime), "dd MMM yyyy, HH:mm")}
-                  </TableCell>
-                  <TableCell className="capitalize text-foreground text-sm">
-                    {tx.paymentMethod}
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`capitalize text-xs ${statusColors[tx.status] ?? ""}`}
+                  {tx.status}
+                </Badge>
+              </div>
+              <div>
+                <p className="font-medium text-sm text-foreground">
+                  {tx.userName}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {format(new Date(tx._creationTime), "dd MMM yyyy, HH:mm")}
+                </p>
+              </div>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span className="capitalize">{tx.paymentMethod}</span>
+                <span className="font-mono">
+                  {tx.transactionReference ?? "—"}
+                </span>
+              </div>
+              <div className="border-t border-border pt-2 text-right">
+                <span className="font-semibold price-text">
+                  {formatPrice(tx.amountInUSDCents)}
+                </span>
+              </div>
+            </div>
+          )}
+          renderTable={() => (
+            <div className="bg-card border border-border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Transaction ID</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Method</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead>Reference</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  {results.map((tx: Record<string, any>) => (
+                    <TableRow
+                      key={tx._id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() =>
+                        navigate({
+                          to: "/admin/Order/$id",
+                          params: { id: tx.orderId },
+                        })
+                      }
                     >
-                      {tx.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right font-semibold price-text">
-                    {formatPrice(tx.amountInUSDCents)}
-                  </TableCell>
-                  <TableCell className="font-mono text-xs text-muted-foreground">
-                    {tx.transactionReference ?? "—"}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                      <TableCell className="font-mono text-xs text-muted-foreground">
+                        {(tx._id as string).slice(-8).toUpperCase()}
+                      </TableCell>
+                      <TableCell className="font-medium text-foreground">
+                        {tx.userName}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground text-sm">
+                        {format(
+                          new Date(tx._creationTime),
+                          "dd MMM yyyy, HH:mm",
+                        )}
+                      </TableCell>
+                      <TableCell className="capitalize text-foreground text-sm">
+                        {tx.paymentMethod}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={`capitalize text-xs ${statusColors[tx.status] ?? ""}`}
+                        >
+                          {tx.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right font-semibold price-text">
+                        {formatPrice(tx.amountInUSDCents)}
+                      </TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground">
+                        {tx.transactionReference ?? "—"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        />
       )}
 
       {/* Load more */}

@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AdminDataView } from "@/components/admin/AdminDataView";
 
 export const Route = createFileRoute("/admin/")({
   component: RouteComponent,
@@ -217,70 +218,112 @@ function RouteComponent() {
             <ShoppingBag className="w-5 h-5 text-primary" />
             Recent Orders Needing Attention
           </h2>
-          <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order</TableHead>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Total</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentOrdersNeedingAttention.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="text-center text-muted-foreground py-6"
-                    >
-                      No orders need attention right now.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  recentOrdersNeedingAttention.map((order) => (
-                    <TableRow
-                      key={order._id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() =>
-                        navigate({
-                          to: "/admin/Order/$id",
-                          params: { id: order._id },
-                        })
-                      }
-                    >
-                      <TableCell>
-                        <div className="font-mono text-xs text-muted-foreground">
-                          {order._id.slice(-8).toUpperCase()}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {format(
-                            new Date(order._creationTime),
-                            "dd MMM, HH:mm",
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium text-sm">
-                        {order.clientName}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          className={
-                            orderStatusColors[order.status] ?? "bg-gray-100"
+          <AdminDataView
+            items={recentOrdersNeedingAttention}
+            keyExtractor={(order) => order._id}
+            emptyState={
+              <div className="text-center text-muted-foreground py-6">
+                No orders need attention right now.
+              </div>
+            }
+            renderCard={(order) => (
+              <div
+                className="bg-card border border-border rounded-lg p-4 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() =>
+                  navigate({
+                    to: "/admin/Order/$id",
+                    params: { id: order._id },
+                  })
+                }
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {order._id.slice(-8).toUpperCase()}
+                  </span>
+                  <Badge
+                    className={orderStatusColors[order.status] ?? "bg-gray-100"}
+                  >
+                    {order.status}
+                  </Badge>
+                </div>
+                <p className="font-medium text-sm">{order.clientName}</p>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>
+                    {format(new Date(order._creationTime), "dd MMM, HH:mm")}
+                  </span>
+                  <span className="font-medium text-foreground">
+                    {formatPrice(order.totalInUSDCents)}
+                  </span>
+                </div>
+              </div>
+            )}
+            renderTable={() => (
+              <div className="bg-card border border-border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Order</TableHead>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentOrdersNeedingAttention.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={4}
+                          className="text-center text-muted-foreground py-6"
+                        >
+                          No orders need attention right now.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      recentOrdersNeedingAttention.map((order) => (
+                        <TableRow
+                          key={order._id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() =>
+                            navigate({
+                              to: "/admin/Order/$id",
+                              params: { id: order._id },
+                            })
                           }
                         >
-                          {order.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right text-sm font-medium">
-                        {formatPrice(order.totalInUSDCents)}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                          <TableCell>
+                            <div className="font-mono text-xs text-muted-foreground">
+                              {order._id.slice(-8).toUpperCase()}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {format(
+                                new Date(order._creationTime),
+                                "dd MMM, HH:mm",
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="font-medium text-sm">
+                            {order.clientName}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              className={
+                                orderStatusColors[order.status] ?? "bg-gray-100"
+                              }
+                            >
+                              {order.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right text-sm font-medium">
+                            {formatPrice(order.totalInUSDCents)}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          />
         </div>
 
         {/* Recent Prescriptions Needing Attention */}
@@ -289,63 +332,105 @@ function RouteComponent() {
             <FileText className="w-5 h-5 text-primary" />
             Recent Prescriptions Needing Attention
           </h2>
-          <div className="bg-card border border-border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentPrescriptionsNeedingAttention.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="text-center text-muted-foreground py-6"
-                    >
-                      No prescriptions need attention right now.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  recentPrescriptionsNeedingAttention.map((pres) => (
-                    <TableRow
-                      key={pres._id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() =>
-                        navigate({
-                          to: "/admin/Prescription/$id",
-                          params: { id: pres._id },
-                        })
-                      }
-                    >
-                      <TableCell className="font-mono text-xs text-muted-foreground">
-                        {pres._id.slice(-8).toUpperCase()}
-                      </TableCell>
-                      <TableCell className="font-medium text-sm">
-                        {pres.clientName}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          className={
-                            prescriptionStatusColors[pres.status] ??
-                            "bg-gray-100"
+          <AdminDataView
+            items={recentPrescriptionsNeedingAttention}
+            keyExtractor={(pres) => pres._id}
+            emptyState={
+              <div className="text-center text-muted-foreground py-6">
+                No prescriptions need attention right now.
+              </div>
+            }
+            renderCard={(pres) => (
+              <div
+                className="bg-card border border-border rounded-lg p-4 space-y-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() =>
+                  navigate({
+                    to: "/admin/Prescription/$id",
+                    params: { id: pres._id },
+                  })
+                }
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {pres._id.slice(-8).toUpperCase()}
+                  </span>
+                  <Badge
+                    className={
+                      prescriptionStatusColors[pres.status] ?? "bg-gray-100"
+                    }
+                  >
+                    {pres.status}
+                  </Badge>
+                </div>
+                <p className="font-medium text-sm">{pres.clientName}</p>
+                <p className="text-xs text-muted-foreground">
+                  {format(new Date(pres._creationTime), "dd MMM, HH:mm")}
+                </p>
+              </div>
+            )}
+            renderTable={() => (
+              <div className="bg-card border border-border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Date</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentPrescriptionsNeedingAttention.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={4}
+                          className="text-center text-muted-foreground py-6"
+                        >
+                          No prescriptions need attention right now.
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      recentPrescriptionsNeedingAttention.map((pres) => (
+                        <TableRow
+                          key={pres._id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() =>
+                            navigate({
+                              to: "/admin/Prescription/$id",
+                              params: { id: pres._id },
+                            })
                           }
                         >
-                          {pres.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {format(new Date(pres._creationTime), "dd MMM, HH:mm")}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                          <TableCell className="font-mono text-xs text-muted-foreground">
+                            {pres._id.slice(-8).toUpperCase()}
+                          </TableCell>
+                          <TableCell className="font-medium text-sm">
+                            {pres.clientName}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              className={
+                                prescriptionStatusColors[pres.status] ??
+                                "bg-gray-100"
+                              }
+                            >
+                              {pres.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {format(
+                              new Date(pres._creationTime),
+                              "dd MMM, HH:mm",
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          />
         </div>
       </div>
     </AdminLayout>
