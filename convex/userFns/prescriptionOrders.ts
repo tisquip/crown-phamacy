@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { Id } from "../_generated/dataModel";
 import { executePurchase } from "../helpers/purchaseHelper";
+import { internal } from "../_generated/api";
 
 const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
@@ -250,6 +251,13 @@ export const purchasePrescriptionOrder = mutation({
       lastModifiedBy: userId,
       lastModifiedAt: now,
     });
+
+    // Schedule order notification email (fire-and-forget)
+    await ctx.scheduler.runAfter(
+      0,
+      internal.helpers.notifications.notifyNewOrder,
+      { orderId },
+    );
 
     return orderId;
   },

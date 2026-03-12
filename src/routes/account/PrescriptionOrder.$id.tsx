@@ -859,6 +859,28 @@ function RouteComponent() {
                       </span>
                     </div>
                   </div>
+                  {/* Payment method quick-select */}
+                  <div>
+                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                      Payment Method
+                    </label>
+                    <select
+                      title="Select payment method"
+                      value={paymentMethod}
+                      onChange={(e) =>
+                        setPaymentMethod(
+                          e.target.value as "cash" | "ecocash" | "bank",
+                        )
+                      }
+                      className="w-full border border-border rounded px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                    >
+                      <option value="ecocash">EcoCash</option>
+                      <option value="bank">PayNow (Bank / Card)</option>
+                      <option value="cash">
+                        Cash on Delivery / Collection
+                      </option>
+                    </select>
+                  </div>
                   <button
                     type="submit"
                     disabled={isSubmitting}

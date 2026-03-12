@@ -1,6 +1,7 @@
 import { mutation, query } from "../_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { internal } from "../_generated/api";
 
 /** Shared validator shape for an uploadedPrescription document. */
 const prescriptionDoc = v.object({
@@ -47,6 +48,14 @@ export const submitPrescription = mutation({
       lastModifiedBy: userId,
       lastModifiedAt: Date.now(),
     });
+
+    // Schedule prescription upload notification email (fire-and-forget)
+    await ctx.scheduler.runAfter(
+      0,
+      internal.helpers.notifications.notifyNewPrescription,
+      { prescriptionId: id },
+    );
+
     return id;
   },
 });

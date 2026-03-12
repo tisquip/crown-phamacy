@@ -97,6 +97,25 @@ export const getPrescriptionWithClient = query({
 });
 
 /**
+ * Get the most recent prescription order for a given prescription (admin view).
+ * Used to display the quotation that was sent to the client.
+ */
+export const getPrescriptionOrderForPrescription = query({
+  args: { prescriptionId: v.id("uploadedPrescription") },
+  returns: v.any(),
+  handler: async (ctx, args) => {
+    const order = await ctx.db
+      .query("prescriptionOrder")
+      .withIndex("by_prescriptionId", (q) =>
+        q.eq("prescriptionId", args.prescriptionId),
+      )
+      .order("desc")
+      .first();
+    return order ?? null;
+  },
+});
+
+/**
  * Lightweight client name look-up for rendering rows in the prescription list.
  */
 export const getClientNamesForPrescriptions = query({

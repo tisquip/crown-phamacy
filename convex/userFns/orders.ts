@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { executePurchase } from "../helpers/purchaseHelper";
 import { Id } from "../_generated/dataModel";
+import { internal } from "../_generated/api";
 
 /**
  * Place an order: creates a unified order record and clears the cart.
@@ -153,6 +154,13 @@ export const placeOrder = mutation({
     for (const cartItem of cartItems) {
       await ctx.db.delete(cartItem._id);
     }
+
+    // 8. Schedule order notification email (fire-and-forget)
+    await ctx.scheduler.runAfter(
+      0,
+      internal.helpers.notifications.notifyNewOrder,
+      { orderId },
+    );
 
     return orderId;
   },

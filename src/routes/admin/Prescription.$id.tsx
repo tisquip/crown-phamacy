@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Doc, Id } from "../../../convex/_generated/dataModel";
 import AdminLayout from "@/components/layout/AdminLayout";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -47,6 +47,9 @@ import {
   Minus,
   Trash2,
   ChevronsUpDown,
+  FileText,
+  Clock,
+  PackageCheck,
 } from "lucide-react";
 import { formatPrice } from "@/lib/formatPrice";
 import { cn } from "@/lib/utils";
@@ -313,6 +316,193 @@ function ProductCombobox({
 
 // ── Main route component ──────────────────────────────────────────────────────
 
+// ── Quotation view (shown when status is "Quotation Sent") ────────────────────
+
+interface QuotationLineItem {
+  productId: string;
+  name: string;
+  quantity: number;
+  unitPriceInUSDCents: number;
+  brandName: string | null;
+  isMedicine?: boolean;
+  isPrescriptionControlled?: boolean;
+}
+
+function QuotationView({
+  prescriptionOrder,
+}: {
+  prescriptionOrder: Record<string, unknown> | null | undefined;
+}) {
+  if (!prescriptionOrder) {
+    return (
+      <div className="bg-card border border-border rounded-lg p-5 flex items-center justify-center h-40 text-sm text-muted-foreground">
+        No quotation data found.
+      </div>
+    );
+  }
+
+  const items: QuotationLineItem[] = (() => {
+    try {
+      return JSON.parse(prescriptionOrder.productsAsJson as string);
+    } catch {
+      return [];
+    }
+  })();
+
+  const totalCents = prescriptionOrder.totalInUSDCents as number;
+  const subtotalCents = prescriptionOrder.subtotalInUSDCents as number;
+  const status = prescriptionOrder.status as string;
+  const expiresAt = prescriptionOrder.expiresAt as number;
+  const isExpired = Date.now() > expiresAt;
+  const resultingOrderId = prescriptionOrder.resultingOrderId as
+    | Id<"order">
+    | undefined;
+
+  const statusColors: Record<string, string> = {
+    pending:
+      "bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300",
+    purchased:
+      "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-300",
+    cancelled:
+      "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-300",
+    expired:
+      "bg-gray-50 dark:bg-gray-950/20 border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400",
+  };
+  const statusLabel: Record<string, string> = {
+    pending: isExpired
+      ? "Expired (awaiting cleanup)"
+      : "Pending — awaiting client action",
+    purchased: "Purchased",
+    cancelled: "Cancelled by client",
+    expired: "Expired",
+  };
+
+  return (
+    <div className="bg-card border border-border rounded-lg p-5 space-y-5">
+      <div className="flex items-center gap-2">
+        <FileText className="w-4 h-4 text-muted-foreground" />
+        <h2 className="text-base font-semibold text-foreground">
+          Quotation Sent to Client
+        </h2>
+      </div>
+
+      <Separator />
+
+      {/* Status badge */}
+      <div
+        className={`flex items-center gap-2 text-xs font-medium rounded-lg border px-3 py-2 ${statusColors[status] ?? statusColors.expired}`}
+      >
+        {status === "purchased" ? (
+          <PackageCheck className="w-4 h-4 shrink-0" />
+        ) : status === "pending" && !isExpired ? (
+          <Clock className="w-4 h-4 shrink-0" />
+        ) : (
+          <XCircle className="w-4 h-4 shrink-0" />
+        )}
+        <span>{statusLabel[status] ?? status}</span>
+        {status === "pending" && !isExpired && (
+          <span className="ml-auto text-muted-foreground font-normal">
+            Expires{" "}
+            {formatDistanceToNow(new Date(expiresAt), { addSuffix: true })}
+          </span>
+        )}
+      </div>
+
+      {resultingOrderId && (
+        <Link
+          to={`/admin/Order/${resultingOrderId}`}
+          className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+        >
+          <PackageCheck className="w-3.5 h-3.5" />
+          View resulting order →
+        </Link>
+      )}
+
+      {/* Line items */}
+      <div className="bg-muted/40 rounded-lg border border-border">
+        <div className="px-4">
+          {items.map((item, i) => {
+            const lineTotal = item.unitPriceInUSDCents * item.quantity;
+            return (
+              <div
+                key={i}
+                className="flex items-center gap-3 py-3 border-b border-border last:border-0"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {item.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {formatPrice(item.unitPriceInUSDCents)} each
+                    {item.isMedicine && (
+                      <Badge
+                        variant="secondary"
+                        className="ml-2 text-[10px] px-1 py-0"
+                      >
+                        Medicine
+                      </Badge>
+                    )}
+                    {item.isPrescriptionControlled && (
+                      <Badge
+                        variant="outline"
+                        className="ml-1 text-[10px] px-1 py-0"
+                      >
+                        Rx
+                      </Badge>
+                    )}
+                  </p>
+                </div>
+                <p className="text-xs text-muted-foreground w-10 text-center shrink-0">
+                  ×{item.quantity}
+                </p>
+                <p className="text-sm font-semibold text-foreground w-20 text-right shrink-0">
+                  {formatPrice(lineTotal)}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex items-center justify-between px-4 py-3 bg-muted rounded-b-lg border-t border-border">
+          <span className="text-sm font-semibold text-foreground">Total</span>
+          <span className="text-lg font-bold text-foreground">
+            {formatPrice(totalCents)}
+          </span>
+        </div>
+      </div>
+
+      {/* Contact details */}
+      {(prescriptionOrder.phoneNumber || prescriptionOrder.address) && (
+        <dl className="text-sm space-y-1">
+          {prescriptionOrder.phoneNumber && (
+            <div className="flex gap-2">
+              <dt className="text-muted-foreground w-24 shrink-0">Phone</dt>
+              <dd className="text-foreground">
+                {prescriptionOrder.phoneNumber as string}
+              </dd>
+            </div>
+          )}
+          {prescriptionOrder.address && (
+            <div className="flex gap-2">
+              <dt className="text-muted-foreground w-24 shrink-0">Address</dt>
+              <dd className="text-foreground">
+                {prescriptionOrder.address as string}
+              </dd>
+            </div>
+          )}
+        </dl>
+      )}
+
+      <div className="text-xs text-muted-foreground">
+        Sent{" "}
+        {format(
+          new Date(prescriptionOrder._creationTime as number),
+          "dd MMM yyyy HH:mm",
+        )}
+      </div>
+    </div>
+  );
+}
+
 function RouteComponent() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
@@ -322,6 +512,11 @@ function RouteComponent() {
   const data = useQuery(api.adminFns.prescriptions.getPrescriptionWithClient, {
     id: prescriptionId,
   });
+
+  const existingPrescriptionOrder = useQuery(
+    api.adminFns.prescriptions.getPrescriptionOrderForPrescription,
+    { prescriptionId },
+  );
 
   const rawProducts = useQuery(api.adminFns.products.list, {}) as
     | Array<Doc<"products">>
@@ -610,9 +805,18 @@ function RouteComponent() {
           </div>
         </div>
 
-        {/* ── Right column: purchase builder ── */}
+        {/* ── Right column: quotation view or purchase builder ── */}
         <div>
-          {isActionable ? (
+          {prescription.status === "Quotation Sent" && isActionable ? (
+            <QuotationView
+              prescriptionOrder={
+                existingPrescriptionOrder as
+                  | Record<string, unknown>
+                  | null
+                  | undefined
+              }
+            />
+          ) : isActionable ? (
             <div className="bg-card border border-border rounded-lg p-5 space-y-5">
               <div className="flex items-center gap-2">
                 <ShoppingCart className="w-4 h-4 text-muted-foreground" />
