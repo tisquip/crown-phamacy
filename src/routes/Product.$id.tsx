@@ -316,10 +316,6 @@ function RouteComponent() {
               <div className="w-full bg-muted text-muted-foreground py-3 rounded font-semibold text-center text-sm">
                 Prescription required — speak to our pharmacist
               </div>
-            ) : product.isMedicine && !product.hasPreviouslyPurchased ? (
-              <div className="w-full bg-muted text-muted-foreground py-3 rounded font-semibold text-center text-sm">
-                Available on re-order only — speak to our pharmacist
-              </div>
             ) : (
               <button
                 onClick={handleAddToCart}

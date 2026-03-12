@@ -43,7 +43,6 @@ import { Route as AccountTransactionsRouteImport } from './routes/account/Transa
 import { Route as AccountPurchasesRouteImport } from './routes/account/Purchases'
 import { Route as AccountPreviouslyPurchasedRouteImport } from './routes/account/PreviouslyPurchased'
 import { Route as AccountPrescriptionsRouteImport } from './routes/account/Prescriptions'
-import { Route as AccountMedicationRouteImport } from './routes/account/Medication'
 import { Route as ProductIdRouteImport } from './routes/Product.$id'
 import { Route as BlogSlugRouteImport } from './routes/Blog.$slug'
 import { Route as AdminPrescriptionIdRouteImport } from './routes/admin/Prescription.$id'
@@ -51,6 +50,7 @@ import { Route as AdminOrderIdRouteImport } from './routes/admin/Order.$id'
 import { Route as AdminClientIdRouteImport } from './routes/admin/Client.$id'
 import { Route as AdminBlogPostIdRouteImport } from './routes/admin/BlogPost.$id'
 import { Route as AccountPurchaseIdRouteImport } from './routes/account/Purchase.$id'
+import { Route as AccountPrescriptionOrderIdRouteImport } from './routes/account/PrescriptionOrder.$id'
 import { Route as AccountPrescriptionIdRouteImport } from './routes/account/Prescription.$id'
 
 const TermsRoute = TermsRouteImport.update({
@@ -225,11 +225,6 @@ const AccountPrescriptionsRoute = AccountPrescriptionsRouteImport.update({
   path: '/Prescriptions',
   getParentRoute: () => AccountRouteRoute,
 } as any)
-const AccountMedicationRoute = AccountMedicationRouteImport.update({
-  id: '/Medication',
-  path: '/Medication',
-  getParentRoute: () => AccountRouteRoute,
-} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/Product/$id',
   path: '/Product/$id',
@@ -265,6 +260,12 @@ const AccountPurchaseIdRoute = AccountPurchaseIdRouteImport.update({
   path: '/Purchase/$id',
   getParentRoute: () => AccountRouteRoute,
 } as any)
+const AccountPrescriptionOrderIdRoute =
+  AccountPrescriptionOrderIdRouteImport.update({
+    id: '/PrescriptionOrder/$id',
+    path: '/PrescriptionOrder/$id',
+    getParentRoute: () => AccountRouteRoute,
+  } as any)
 const AccountPrescriptionIdRoute = AccountPrescriptionIdRouteImport.update({
   id: '/Prescription/$id',
   path: '/Prescription/$id',
@@ -286,7 +287,6 @@ export interface FileRoutesByFullPath {
   '/Terms': typeof TermsRoute
   '/Blog/$slug': typeof BlogSlugRoute
   '/Product/$id': typeof ProductIdRoute
-  '/account/Medication': typeof AccountMedicationRoute
   '/account/Prescriptions': typeof AccountPrescriptionsRoute
   '/account/PreviouslyPurchased': typeof AccountPreviouslyPurchasedRoute
   '/account/Purchases': typeof AccountPurchasesRoute
@@ -310,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/account/Prescription/$id': typeof AccountPrescriptionIdRoute
+  '/account/PrescriptionOrder/$id': typeof AccountPrescriptionOrderIdRoute
   '/account/Purchase/$id': typeof AccountPurchaseIdRoute
   '/admin/BlogPost/$id': typeof AdminBlogPostIdRoute
   '/admin/Client/$id': typeof AdminClientIdRoute
@@ -329,7 +330,6 @@ export interface FileRoutesByTo {
   '/Terms': typeof TermsRoute
   '/Blog/$slug': typeof BlogSlugRoute
   '/Product/$id': typeof ProductIdRoute
-  '/account/Medication': typeof AccountMedicationRoute
   '/account/Prescriptions': typeof AccountPrescriptionsRoute
   '/account/PreviouslyPurchased': typeof AccountPreviouslyPurchasedRoute
   '/account/Purchases': typeof AccountPurchasesRoute
@@ -353,6 +353,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
   '/account/Prescription/$id': typeof AccountPrescriptionIdRoute
+  '/account/PrescriptionOrder/$id': typeof AccountPrescriptionOrderIdRoute
   '/account/Purchase/$id': typeof AccountPurchaseIdRoute
   '/admin/BlogPost/$id': typeof AdminBlogPostIdRoute
   '/admin/Client/$id': typeof AdminClientIdRoute
@@ -375,7 +376,6 @@ export interface FileRoutesById {
   '/Terms': typeof TermsRoute
   '/Blog/$slug': typeof BlogSlugRoute
   '/Product/$id': typeof ProductIdRoute
-  '/account/Medication': typeof AccountMedicationRoute
   '/account/Prescriptions': typeof AccountPrescriptionsRoute
   '/account/PreviouslyPurchased': typeof AccountPreviouslyPurchasedRoute
   '/account/Purchases': typeof AccountPurchasesRoute
@@ -399,6 +399,7 @@ export interface FileRoutesById {
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/account/Prescription/$id': typeof AccountPrescriptionIdRoute
+  '/account/PrescriptionOrder/$id': typeof AccountPrescriptionOrderIdRoute
   '/account/Purchase/$id': typeof AccountPurchaseIdRoute
   '/admin/BlogPost/$id': typeof AdminBlogPostIdRoute
   '/admin/Client/$id': typeof AdminClientIdRoute
@@ -422,7 +423,6 @@ export interface FileRouteTypes {
     | '/Terms'
     | '/Blog/$slug'
     | '/Product/$id'
-    | '/account/Medication'
     | '/account/Prescriptions'
     | '/account/PreviouslyPurchased'
     | '/account/Purchases'
@@ -446,6 +446,7 @@ export interface FileRouteTypes {
     | '/account/'
     | '/admin/'
     | '/account/Prescription/$id'
+    | '/account/PrescriptionOrder/$id'
     | '/account/Purchase/$id'
     | '/admin/BlogPost/$id'
     | '/admin/Client/$id'
@@ -465,7 +466,6 @@ export interface FileRouteTypes {
     | '/Terms'
     | '/Blog/$slug'
     | '/Product/$id'
-    | '/account/Medication'
     | '/account/Prescriptions'
     | '/account/PreviouslyPurchased'
     | '/account/Purchases'
@@ -489,6 +489,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin'
     | '/account/Prescription/$id'
+    | '/account/PrescriptionOrder/$id'
     | '/account/Purchase/$id'
     | '/admin/BlogPost/$id'
     | '/admin/Client/$id'
@@ -510,7 +511,6 @@ export interface FileRouteTypes {
     | '/Terms'
     | '/Blog/$slug'
     | '/Product/$id'
-    | '/account/Medication'
     | '/account/Prescriptions'
     | '/account/PreviouslyPurchased'
     | '/account/Purchases'
@@ -534,6 +534,7 @@ export interface FileRouteTypes {
     | '/account/'
     | '/admin/'
     | '/account/Prescription/$id'
+    | '/account/PrescriptionOrder/$id'
     | '/account/Purchase/$id'
     | '/admin/BlogPost/$id'
     | '/admin/Client/$id'
@@ -798,13 +799,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountPrescriptionsRouteImport
       parentRoute: typeof AccountRouteRoute
     }
-    '/account/Medication': {
-      id: '/account/Medication'
-      path: '/Medication'
-      fullPath: '/account/Medication'
-      preLoaderRoute: typeof AccountMedicationRouteImport
-      parentRoute: typeof AccountRouteRoute
-    }
     '/Product/$id': {
       id: '/Product/$id'
       path: '/Product/$id'
@@ -854,6 +848,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountPurchaseIdRouteImport
       parentRoute: typeof AccountRouteRoute
     }
+    '/account/PrescriptionOrder/$id': {
+      id: '/account/PrescriptionOrder/$id'
+      path: '/PrescriptionOrder/$id'
+      fullPath: '/account/PrescriptionOrder/$id'
+      preLoaderRoute: typeof AccountPrescriptionOrderIdRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
     '/account/Prescription/$id': {
       id: '/account/Prescription/$id'
       path: '/Prescription/$id'
@@ -865,7 +866,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AccountRouteRouteChildren {
-  AccountMedicationRoute: typeof AccountMedicationRoute
   AccountPrescriptionsRoute: typeof AccountPrescriptionsRoute
   AccountPreviouslyPurchasedRoute: typeof AccountPreviouslyPurchasedRoute
   AccountPurchasesRoute: typeof AccountPurchasesRoute
@@ -873,11 +873,11 @@ interface AccountRouteRouteChildren {
   AccountWishlistRoute: typeof AccountWishlistRoute
   AccountIndexRoute: typeof AccountIndexRoute
   AccountPrescriptionIdRoute: typeof AccountPrescriptionIdRoute
+  AccountPrescriptionOrderIdRoute: typeof AccountPrescriptionOrderIdRoute
   AccountPurchaseIdRoute: typeof AccountPurchaseIdRoute
 }
 
 const AccountRouteRouteChildren: AccountRouteRouteChildren = {
-  AccountMedicationRoute: AccountMedicationRoute,
   AccountPrescriptionsRoute: AccountPrescriptionsRoute,
   AccountPreviouslyPurchasedRoute: AccountPreviouslyPurchasedRoute,
   AccountPurchasesRoute: AccountPurchasesRoute,
@@ -885,6 +885,7 @@ const AccountRouteRouteChildren: AccountRouteRouteChildren = {
   AccountWishlistRoute: AccountWishlistRoute,
   AccountIndexRoute: AccountIndexRoute,
   AccountPrescriptionIdRoute: AccountPrescriptionIdRoute,
+  AccountPrescriptionOrderIdRoute: AccountPrescriptionOrderIdRoute,
   AccountPurchaseIdRoute: AccountPurchaseIdRoute,
 }
 

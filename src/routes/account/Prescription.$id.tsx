@@ -3,8 +3,14 @@ import Layout from "@/components/layout/Layout";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
-import { format } from "date-fns";
-import { FileText, Loader2, MessageSquare, ShoppingBag } from "lucide-react";
+import { format, formatDistanceToNow } from "date-fns";
+import {
+  FileText,
+  Loader2,
+  MessageSquare,
+  ShoppingBag,
+  ShoppingCart,
+} from "lucide-react";
 import { PrescriptionImage } from "@/components/PrescriptionImage";
 
 export const Route = createFileRoute("/account/Prescription/$id")({
@@ -46,6 +52,13 @@ function RouteComponent() {
   const linkedOrderId = useQuery(
     api.userFns.orders.getOrderForPrescription,
     prescription && prescription.status === "Purchased"
+      ? { prescriptionId: prescription._id }
+      : "skip",
+  );
+
+  const prescriptionOrder = useQuery(
+    api.userFns.prescriptionOrders.getOrderForPrescription,
+    prescription && prescription.status === "Quotation Sent"
       ? { prescriptionId: prescription._id }
       : "skip",
   );
@@ -152,6 +165,42 @@ function RouteComponent() {
                 >
                   View Order →
                 </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Link to prescription order when quotation sent */}
+        {prescription.status === "Quotation Sent" && prescriptionOrder && (
+          <section className="border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20 rounded-lg p-5">
+            <div className="flex items-center gap-3">
+              <ShoppingCart className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <div>
+                <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+                  Your prescription order is ready for checkout
+                </p>
+                {!prescriptionOrder.isExpired ? (
+                  <>
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
+                      Expires{" "}
+                      {formatDistanceToNow(
+                        new Date(prescriptionOrder.expiresAt),
+                        { addSuffix: true },
+                      )}
+                    </p>
+                    <Link
+                      to="/account/PrescriptionOrder/$id"
+                      params={{ id: prescriptionOrder._id }}
+                      className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors"
+                    >
+                      Complete Purchase →
+                    </Link>
+                  </>
+                ) : (
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">
+                    This order has expired.
+                  </p>
+                )}
               </div>
             </div>
           </section>

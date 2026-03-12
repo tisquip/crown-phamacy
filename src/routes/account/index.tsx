@@ -3,7 +3,6 @@ import Layout from "@/components/layout/Layout";
 import { useAuth } from "@/context/AuthContext";
 import {
   ShoppingBag,
-  Pill,
   FileText,
   Heart,
   Upload,
@@ -130,12 +129,6 @@ function RouteComponent() {
           ? "Loading..."
           : `${orderCount} order${orderCount !== 1 ? "s" : ""}`,
       href: "/account/purchases",
-    },
-    {
-      icon: Pill,
-      label: "My Medication",
-      desc: "Previously purchased medication",
-      href: "/account/medication",
     },
     {
       icon: CreditCard,

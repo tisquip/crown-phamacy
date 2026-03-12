@@ -331,8 +331,8 @@ function RouteComponent() {
   const updateStatus = useMutation(
     api.adminFns.prescriptions.updatePrescriptionStatus,
   );
-  const createPurchase = useMutation(
-    api.adminFns.prescriptions.createPurchaseReceiptForPrescription,
+  const createPrescriptionOrder = useMutation(
+    api.adminFns.prescriptions.createPrescriptionOrder,
   );
 
   // ── Purchase builder state ──────────────────────────────────────────────────
@@ -395,9 +395,7 @@ function RouteComponent() {
     setLineItems((prev) => prev.filter((li) => li.productId !== productId));
   }
 
-  async function handleStatusChange(
-    status: "Uploaded" | "Quotation Sent" | "Cancelled",
-  ) {
+  async function handleStatusChange(status: "Uploaded" | "Cancelled") {
     try {
       await updateStatus({ id: prescriptionId, status });
       toast.success(`Status updated to "${status}"`);
@@ -410,7 +408,7 @@ function RouteComponent() {
 
   async function onSubmitPurchase(values: PurchaseFormValues) {
     if (lineItems.length === 0) {
-      toast.error("Add at least one product to create a purchase");
+      toast.error("Add at least one product to create a prescription order");
       return;
     }
 
@@ -431,29 +429,30 @@ function RouteComponent() {
           quantity: li.qty,
           unitPriceInUSDCents: unitPrice,
           brandName: product.brandName ?? null,
+          isMedicine: product.isMedicine,
+          isPrescriptionControlled: product.isPrescriptionControlled,
         },
       ];
     });
 
     try {
-      await createPurchase({
+      await createPrescriptionOrder({
         prescriptionId,
         productIds,
-        productsAsJsonOnDateOfPurchase: JSON.stringify(snapshot),
+        productsAsJson: JSON.stringify(snapshot),
         subtotalInUSDCents: totalCents,
-        deliveryFeeInUSDCents: 0,
         totalInUSDCents: totalCents,
         phoneNumber: values.phoneNumber || undefined,
         address: values.address || undefined,
       });
-      toast.success(
-        "Purchase receipt created — prescription marked as Purchased",
-      );
+      toast.success("Prescription order created — quotation sent to client");
       setLineItems([]);
       form.reset();
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Failed to create purchase",
+        err instanceof Error
+          ? err.message
+          : "Failed to create prescription order",
       );
     }
   }
@@ -571,16 +570,6 @@ function RouteComponent() {
               <>
                 <Separator />
                 <div className="flex flex-wrap gap-2">
-                  {prescription.status === "Uploaded" && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleStatusChange("Quotation Sent")}
-                    >
-                      <SendHorizonal className="w-4 h-4 mr-1.5" />
-                      Mark Quotation Sent
-                    </Button>
-                  )}
                   <Button
                     size="sm"
                     variant="destructive"
@@ -628,7 +617,7 @@ function RouteComponent() {
               <div className="flex items-center gap-2">
                 <ShoppingCart className="w-4 h-4 text-muted-foreground" />
                 <h2 className="text-base font-semibold text-foreground">
-                  Create Purchase Receipt
+                  Create Prescription Order
                 </h2>
               </div>
 
@@ -735,7 +724,7 @@ function RouteComponent() {
                 ) : (
                   <ShoppingCart className="w-4 h-4 mr-2" />
                 )}
-                Confirm Purchase — {formatPrice(totalCents)}
+                Send Prescription Order — {formatPrice(totalCents)}
               </Button>
             </div>
           ) : (

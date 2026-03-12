@@ -80,32 +80,17 @@ export const addToCart = mutation({
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
 
-    // Block prescription-controlled products for non-admins
+    // Block prescription-controlled and medicine products for non-admins
     const product = await ctx.db.get(args.productId);
     if (!product) throw new Error("Product not found");
-    if (product.isPrescriptionControlled) {
+    if (product.isPrescriptionControlled || product.isMedicine) {
       const profile = await ctx.db
         .query("userProfile")
         .withIndex("byUserId", (q) => q.eq("userId", userId))
         .unique();
       if (!profile?.isAdmin) {
         throw new Error(
-          "Prescription-controlled products cannot be added to cart",
-        );
-      }
-    }
-
-    // Block medicine products unless the user has previously purchased them
-    if (product.isMedicine) {
-      const record = await ctx.db
-        .query("medicationPurchasedByClient")
-        .withIndex("by_clientId_and_productId", (q) =>
-          q.eq("clientId", userId).eq("productId", args.productId),
-        )
-        .unique();
-      if (!record) {
-        throw new Error(
-          "Medicine products can only be re-ordered after a previous purchase",
+          "Medication and prescription-controlled products can only be purchased via a prescription order",
         );
       }
     }
@@ -155,30 +140,15 @@ export const addToCartWithQuantity = mutation({
     const product = await ctx.db.get(args.productId);
     if (!product) throw new Error("Product not found");
 
-    // Block prescription-controlled products for non-admins
-    if (product.isPrescriptionControlled) {
+    // Block prescription-controlled and medicine products for non-admins
+    if (product.isPrescriptionControlled || product.isMedicine) {
       const profile = await ctx.db
         .query("userProfile")
         .withIndex("byUserId", (q) => q.eq("userId", userId))
         .unique();
       if (!profile?.isAdmin) {
         throw new Error(
-          "Prescription-controlled products cannot be added to cart",
-        );
-      }
-    }
-
-    // Block medicine products unless the user has previously purchased them
-    if (product.isMedicine) {
-      const record = await ctx.db
-        .query("medicationPurchasedByClient")
-        .withIndex("by_clientId_and_productId", (q) =>
-          q.eq("clientId", userId).eq("productId", args.productId),
-        )
-        .unique();
-      if (!record) {
-        throw new Error(
-          "Medicine products can only be re-ordered after a previous purchase",
+          "Medication and prescription-controlled products can only be purchased via a prescription order",
         );
       }
     }

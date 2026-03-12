@@ -20,6 +20,15 @@ interface OrderSnapshot {
   quantity: number;
   unitPriceInUSDCents: number;
   brandName: string | null;
+  isMedicine?: boolean;
+  isPrescriptionControlled?: boolean;
+}
+
+const RX_SYMBOL = "℞ Prescription Item";
+
+function censorName(item: OrderSnapshot): string {
+  if (item.isMedicine || item.isPrescriptionControlled) return RX_SYMBOL;
+  return item.name;
 }
 
 function RouteComponent() {
@@ -57,8 +66,18 @@ function RouteComponent() {
     );
     let addedCount = 0;
     for (const item of items) {
+      // Skip medication and prescription items — they can't be re-ordered
+      if (item.isMedicine || item.isPrescriptionControlled) continue;
       addToCartWithQuantity(item.productId as Id<"products">, item.quantity);
       addedCount++;
+    }
+    if (addedCount === 0) {
+      toast({
+        title: "No items to reorder",
+        description:
+          "This order only contained prescription items which cannot be reordered directly.",
+      });
+      return;
     }
     toast({
       title: "Reorder added to basket",
@@ -153,18 +172,31 @@ function RouteComponent() {
                   </div>
 
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {items.map((item, idx) => (
-                      <Link
-                        key={idx}
-                        to={`/product/${item.productId}`}
-                        className="flex items-center gap-2 border border-border rounded px-2 py-1 hover:bg-muted text-xs"
-                      >
-                        <span className="text-foreground">
-                          {item.name}{" "}
+                    {items.map((item, idx) => {
+                      const isCensored =
+                        item.isMedicine || item.isPrescriptionControlled;
+                      const displayName = censorName(item);
+                      return isCensored ? (
+                        <span
+                          key={idx}
+                          className="flex items-center gap-2 border border-border rounded px-2 py-1 text-xs text-muted-foreground italic"
+                        >
+                          {displayName}{" "}
                           {item.quantity > 1 ? `×${item.quantity}` : ""}
                         </span>
-                      </Link>
-                    ))}
+                      ) : (
+                        <Link
+                          key={idx}
+                          to={`/product/${item.productId}`}
+                          className="flex items-center gap-2 border border-border rounded px-2 py-1 hover:bg-muted text-xs"
+                        >
+                          <span className="text-foreground">
+                            {displayName}{" "}
+                            {item.quantity > 1 ? `×${item.quantity}` : ""}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </div>
 
                   <div className="flex gap-2">

@@ -160,6 +160,7 @@ export const placeOrder = mutation({
 
 /**
  * List orders for the logged-in user, newest first.
+ * Enriches each order's product snapshot with medication flags for censoring.
  */
 export const listMyOrders = query({
   args: {},
@@ -174,13 +175,49 @@ export const listMyOrders = query({
       .order("desc")
       .collect();
 
-    return orders;
+    // For each order, look up actual product data to add medication flags
+    const productCache = new Map<
+      string,
+      { isMedicine: boolean; isPrescriptionControlled: boolean }
+    >();
+    const enrichedOrders = [];
+
+    for (const order of orders) {
+      const items = JSON.parse(order.productsAsJsonOnDateOfPurchase);
+      const enrichedItems = [];
+
+      for (const item of items) {
+        let flags = productCache.get(item.productId);
+        if (!flags) {
+          const product = await ctx.db.get(item.productId as Id<"products">);
+          flags = {
+            isMedicine: product?.isMedicine ?? false,
+            isPrescriptionControlled:
+              product?.isPrescriptionControlled ?? false,
+          };
+          productCache.set(item.productId, flags);
+        }
+        enrichedItems.push({
+          ...item,
+          isMedicine: item.isMedicine ?? flags.isMedicine,
+          isPrescriptionControlled:
+            item.isPrescriptionControlled ?? flags.isPrescriptionControlled,
+        });
+      }
+
+      enrichedOrders.push({
+        ...order,
+        productsAsJsonOnDateOfPurchase: JSON.stringify(enrichedItems),
+      });
+    }
+
+    return enrichedOrders;
   },
 });
 
 /**
  * Get a single order by ID (must belong to the logged-in user).
- * Enriches with branch details if it's a collection order.
+ * Enriches with branch details and medication flags for censoring.
  */
 export const getOrder = query({
   args: { orderId: v.id("order") },
@@ -198,69 +235,26 @@ export const getOrder = query({
       branchDetails = await ctx.db.get(order.branchCollection);
     }
 
-    return { ...order, branchDetails };
-  },
-});
-
-/**
- * Get medications the logged-in user has previously purchased,
- * enriched with current product data.
- */
-export const getMyPurchasedMedications = query({
-  args: {},
-  returns: v.array(v.any()),
-  handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return [];
-
-    const medEntries = await ctx.db
-      .query("medicationPurchasedByClient")
-      .withIndex("by_clientId_and_productId", (q) => q.eq("clientId", userId))
-      .collect();
-
-    const brandCache = new Map<string, string>();
-    const results = [];
-
-    for (const entry of medEntries) {
-      const product = await ctx.db.get(entry.productId);
-      if (!product || product.isDeleted) continue;
-
-      let brandName: string | null = null;
-      if (product.brandId) {
-        if (brandCache.has(product.brandId)) {
-          brandName = brandCache.get(product.brandId) ?? null;
-        } else {
-          const brand = await ctx.db.get(product.brandId);
-          if (brand && !brand.isDeleted) {
-            brandName = brand.name;
-            brandCache.set(product.brandId, brand.name);
-          }
-        }
-      }
-
-      // Find the most recent order containing this product
-      const orders = await ctx.db
-        .query("order")
-        .withIndex("by_clientId", (q) => q.eq("clientId", userId))
-        .order("desc")
-        .collect();
-
-      let lastPurchaseDate: number | null = null;
-      for (const order of orders) {
-        if (order.productIds.includes(entry.productId)) {
-          lastPurchaseDate = order._creationTime;
-          break;
-        }
-      }
-
-      results.push({
-        ...product,
-        brandName,
-        lastPurchaseDate,
+    // Enrich items with medication flags
+    const items = JSON.parse(order.productsAsJsonOnDateOfPurchase);
+    const enrichedItems = [];
+    for (const item of items) {
+      const product = await ctx.db.get(item.productId as Id<"products">);
+      enrichedItems.push({
+        ...item,
+        isMedicine: item.isMedicine ?? product?.isMedicine ?? false,
+        isPrescriptionControlled:
+          item.isPrescriptionControlled ??
+          product?.isPrescriptionControlled ??
+          false,
       });
     }
 
-    return results;
+    return {
+      ...order,
+      branchDetails,
+      productsAsJsonOnDateOfPurchase: JSON.stringify(enrichedItems),
+    };
   },
 });
 

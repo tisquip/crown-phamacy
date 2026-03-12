@@ -6,9 +6,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
  * List active (non-deleted) products for the public storefront.
  *
  * Products where `isMedicine` or `isPrescriptionControlled` is true are
- * excluded by default.  When a logged-in user has previously purchased
- * such a product (tracked via `medicationPurchasedByClient`), those
- * products are included so the user can re-order.
+ * always excluded — these can only be purchased via prescription orders.
  *
  * Each product is enriched with:
  *  - `brandName`  – resolved from `productBrand`
@@ -24,30 +22,10 @@ export const listPublic = query({
       .withIndex("by_isDeleted_and_name", (q) => q.eq("isDeleted", undefined))
       .collect();
 
-    // Determine the logged-in user's previously purchased medication IDs
-    const userId = await getAuthUserId(ctx);
-    const purchasedMedProductIds = new Set<string>();
-
-    if (userId) {
-      const medicationPurchases = await ctx.db
-        .query("medicationPurchasedByClient")
-        .withIndex("by_clientId_and_productId", (q) => q.eq("clientId", userId))
-        .collect();
-      for (const mp of medicationPurchases) {
-        purchasedMedProductIds.add(mp.productId);
-      }
-    }
-
-    // Filter:
-    // - isPrescriptionControlled products are NEVER shown on the storefront
-    // - isMedicine products are only shown if the user has previously purchased them
+    // Filter out all medicine and prescription-controlled products
     const eligible = allProducts.filter((p) => {
-      if (p.isPrescriptionControlled) {
-        return false;
-      }
-      if (p.isMedicine) {
-        return purchasedMedProductIds.has(p._id);
-      }
+      if (p.isPrescriptionControlled) return false;
+      if (p.isMedicine) return false;
       return true;
     });
 
@@ -101,13 +79,9 @@ export const listPublic = query({
 /**
  * Fetch a single product by ID for the product detail page.
  *
- * Unlike `listPublic`, this query applies NO visibility filtering — it will
- * return prescription-controlled and medicine-only products so the detail
- * page can always be rendered.
- *
- * Returns null if the product doesn't exist or has been soft-deleted.
- * Also returns `hasPreviouslyPurchased` so the UI can gate the add-to-cart
- * button for medicine products.
+ * Medicine and prescription-controlled products are no longer viewable
+ * by regular users. Returns null for such products unless the user is
+ * an admin.
  */
 export const getById = query({
   args: { productId: v.id("products") },
@@ -115,6 +89,20 @@ export const getById = query({
   handler: async (ctx, args) => {
     const product = await ctx.db.get(args.productId);
     if (!product || product.isDeleted) return null;
+
+    // Block medicine and prescription-controlled products for non-admins
+    if (product.isMedicine || product.isPrescriptionControlled) {
+      const userId = await getAuthUserId(ctx);
+      if (userId) {
+        const profile = await ctx.db
+          .query("userProfile")
+          .withIndex("byUserId", (q) => q.eq("userId", userId))
+          .unique();
+        if (!profile?.isAdmin) return null;
+      } else {
+        return null;
+      }
+    }
 
     // Resolve brand name
     let brandName: string | null = null;
@@ -132,20 +120,7 @@ export const getById = query({
       }
     }
 
-    // Check if the logged-in user has previously purchased this product
-    const userId = await getAuthUserId(ctx);
-    let hasPreviouslyPurchased = false;
-    if (userId) {
-      const record = await ctx.db
-        .query("medicationPurchasedByClient")
-        .withIndex("by_clientId_and_productId", (q) =>
-          q.eq("clientId", userId).eq("productId", args.productId),
-        )
-        .unique();
-      hasPreviouslyPurchased = record !== null;
-    }
-
-    return { ...product, brandName, categoryNames, hasPreviouslyPurchased };
+    return { ...product, brandName, categoryNames };
   },
 });
 

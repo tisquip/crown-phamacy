@@ -44,6 +44,7 @@ import type * as userFns_fullAdvertBanners from "../userFns/fullAdvertBanners.js
 import type * as userFns_homepage from "../userFns/homepage.js";
 import type * as userFns_newsletter from "../userFns/newsletter.js";
 import type * as userFns_orders from "../userFns/orders.js";
+import type * as userFns_prescriptionOrders from "../userFns/prescriptionOrders.js";
 import type * as userFns_prescriptions from "../userFns/prescriptions.js";
 import type * as userFns_products from "../userFns/products.js";
 import type * as userFns_siteSettings from "../userFns/siteSettings.js";
@@ -93,6 +94,7 @@ declare const fullApi: ApiFromModules<{
   "userFns/homepage": typeof userFns_homepage;
   "userFns/newsletter": typeof userFns_newsletter;
   "userFns/orders": typeof userFns_orders;
+  "userFns/prescriptionOrders": typeof userFns_prescriptionOrders;
   "userFns/prescriptions": typeof userFns_prescriptions;
   "userFns/products": typeof userFns_products;
   "userFns/siteSettings": typeof userFns_siteSettings;

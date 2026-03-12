@@ -30,6 +30,20 @@ interface OrderSnapshot {
   quantity: number;
   unitPriceInUSDCents: number;
   brandName: string | null;
+  isMedicine?: boolean;
+  isPrescriptionControlled?: boolean;
+}
+
+const RX_SYMBOL = "℞ Prescription Item";
+
+function censorName(item: OrderSnapshot): string {
+  if (item.isMedicine || item.isPrescriptionControlled) return RX_SYMBOL;
+  return item.name;
+}
+
+function censorBrand(item: OrderSnapshot): string | null {
+  if (item.isMedicine || item.isPrescriptionControlled) return null;
+  return item.brandName;
 }
 
 function RouteComponent() {
@@ -138,8 +152,18 @@ function RouteComponent() {
     }
     let addedCount = 0;
     for (const item of items) {
+      // Skip medication and prescription items — they can't be re-ordered
+      if (item.isMedicine || item.isPrescriptionControlled) continue;
       addToCartWithQuantity(item.productId as Id<"products">, item.quantity);
       addedCount++;
+    }
+    if (addedCount === 0) {
+      toast({
+        title: "No items to reorder",
+        description:
+          "This order only contained prescription items which cannot be reordered directly.",
+      });
+      return;
     }
     toast({
       title: "Reorder added to basket",
@@ -298,10 +322,14 @@ function RouteComponent() {
                 <tr key={i} className="border-t border-border">
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium text-foreground">{item.name}</p>
-                      {item.brandName && (
+                      <p
+                        className={`font-medium ${item.isMedicine || item.isPrescriptionControlled ? "text-muted-foreground italic" : "text-foreground"}`}
+                      >
+                        {censorName(item)}
+                      </p>
+                      {censorBrand(item) && (
                         <p className="text-xs text-muted-foreground">
-                          {item.brandName}
+                          {censorBrand(item)}
                         </p>
                       )}
                     </div>

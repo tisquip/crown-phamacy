@@ -3,7 +3,6 @@ import { v } from "convex/values";
 import { paginationOptsValidator, GenericMutationCtx } from "convex/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { DataModel, Id } from "../_generated/dataModel";
-import { executePurchase } from "../helpers/purchaseHelper";
 
 // ── Auth helper ───────────────────────────────────────────────────────────────
 
@@ -119,17 +118,14 @@ export const getClientNamesForPrescriptions = query({
 // ── Mutations ─────────────────────────────────────────────────────────────────
 
 /**
- * Update the status of a prescription. Use this for all status transitions
- * EXCEPT "Purchased" — that requires createPurchaseReceiptForPrescription.
+ * Update the status of a prescription. Use this for status transitions
+ * like Cancelled. "Quotation Sent" is set automatically when a prescription
+ * order is created, and "Purchased" when the user completes the purchase.
  */
 export const updatePrescriptionStatus = mutation({
   args: {
     id: v.id("uploadedPrescription"),
-    status: v.union(
-      v.literal("Uploaded"),
-      v.literal("Quotation Sent"),
-      v.literal("Cancelled"),
-    ),
+    status: v.union(v.literal("Uploaded"), v.literal("Cancelled")),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -151,26 +147,23 @@ export const updatePrescriptionStatus = mutation({
 });
 
 /**
- * Create an order for a prescription and mark it as Purchased.
+ * Create a prescription order for a prescription.
  *
- * - Validates the prescription is not already Purchased.
- * - Creates an order linked to the prescription.
- * - Saves medicationPurchasedByClient entries for medicine/controlled products
- *   (skips duplicates).
- * - Sets prescription status to "Purchased" (irreversible).
+ * This creates a prescriptionOrder (valid for 24 hours) and sets the
+ * prescription status to "Quotation Sent". The user can then choose to
+ * purchase or cancel the prescription order.
  */
-export const createPurchaseReceiptForPrescription = mutation({
+export const createPrescriptionOrder = mutation({
   args: {
     prescriptionId: v.id("uploadedPrescription"),
     productIds: v.array(v.id("products")),
-    productsAsJsonOnDateOfPurchase: v.string(),
+    productsAsJson: v.string(),
     subtotalInUSDCents: v.number(),
-    deliveryFeeInUSDCents: v.number(),
     totalInUSDCents: v.number(),
     phoneNumber: v.optional(v.string()),
     address: v.optional(v.string()),
   },
-  returns: v.id("order"),
+  returns: v.id("prescriptionOrder"),
   handler: async (ctx, args) => {
     const adminUserId = await requireAdmin(ctx);
 
@@ -182,26 +175,46 @@ export const createPurchaseReceiptForPrescription = mutation({
       );
     }
 
-    const orderId = await executePurchase(ctx, adminUserId, {
+    // Check no existing pending prescription order for this prescription
+    const existingOrders = await ctx.db
+      .query("prescriptionOrder")
+      .withIndex("by_prescriptionId", (q) =>
+        q.eq("prescriptionId", args.prescriptionId),
+      )
+      .collect();
+    const activePO = existingOrders.find((po) => po.status === "pending");
+    if (activePO) {
+      throw new Error(
+        "A pending prescription order already exists for this prescription",
+      );
+    }
+
+    const now = Date.now();
+    const expiresAt = now + 24 * 60 * 60 * 1000; // 24 hours
+
+    const prescriptionOrderId = await ctx.db.insert("prescriptionOrder", {
       clientId: prescription.clientId,
+      prescriptionId: args.prescriptionId,
+      createdByAdmin: adminUserId,
+      productsAsJson: args.productsAsJson,
       productIds: args.productIds,
-      uploadedPrescriptionIds: [args.prescriptionId],
-      productsAsJsonOnDateOfPurchase: args.productsAsJsonOnDateOfPurchase,
       subtotalInUSDCents: args.subtotalInUSDCents,
-      deliveryFeeInUSDCents: args.deliveryFeeInUSDCents,
       totalInUSDCents: args.totalInUSDCents,
+      status: "pending",
+      expiresAt,
       phoneNumber: args.phoneNumber,
       address: args.address,
-      orderIsCollection: false,
-    });
-
-    // Mark prescription as Purchased
-    await ctx.db.patch(args.prescriptionId, {
-      status: "Purchased",
       lastModifiedBy: adminUserId,
-      lastModifiedAt: Date.now(),
+      lastModifiedAt: now,
     });
 
-    return orderId;
+    // Mark prescription as "Quotation Sent"
+    await ctx.db.patch(args.prescriptionId, {
+      status: "Quotation Sent",
+      lastModifiedBy: adminUserId,
+      lastModifiedAt: now,
+    });
+
+    return prescriptionOrderId;
   },
 });

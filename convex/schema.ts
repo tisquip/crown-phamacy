@@ -321,6 +321,30 @@ export default defineSchema({
   })
     .index("by_orderId", ["orderId"])
     .index("by_userId", ["userId"]),
+  prescriptionOrder: defineTable({
+    clientId: v.id("users"),
+    prescriptionId: v.id("uploadedPrescription"),
+    createdByAdmin: v.id("users"),
+    productsAsJson: v.string(), // JSON snapshot of line items
+    productIds: v.array(v.id("products")),
+    subtotalInUSDCents: v.number(),
+    totalInUSDCents: v.number(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("purchased"),
+      v.literal("cancelled"),
+      v.literal("expired"),
+    ),
+    expiresAt: v.number(), // 24 hours after creation
+    resultingOrderId: v.optional(v.id("order")),
+    phoneNumber: v.optional(v.string()),
+    address: v.optional(v.string()),
+    ...auditFields,
+  })
+    .index("by_clientId", ["clientId"])
+    .index("by_prescriptionId", ["prescriptionId"])
+    .index("by_clientId_and_status", ["clientId", "status"]),
+
   blogPost: defineTable({
     title: v.string(),
     slug: v.string(),

@@ -298,12 +298,6 @@ const Header = () => {
             {isLoggedIn && (
               <>
                 <Link
-                  to="/account/medication"
-                  className="px-4 py-2.5 text-sm font-medium whitespace-nowrap text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10"
-                >
-                  My Medication
-                </Link>
-                <Link
                   to="/account"
                   className="px-4 py-2.5 text-sm font-medium whitespace-nowrap text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/10"
                 >

@@ -5,7 +5,7 @@ import {
   getClientPurchaseReceipts,
   getClientPrescriptions,
 } from "@/data/dummyClientData";
-import { ShoppingBag, Pill, FileText, Heart, Upload } from "lucide-react";
+import { ShoppingBag, FileText, Heart, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/admin/Account")({
   component: RouteComponent,
@@ -47,12 +47,6 @@ function RouteComponent() {
       label: "Previously Purchased Products",
       desc: "Reorder your favourites",
       href: "/account/previously-purchased",
-    },
-    {
-      icon: Pill,
-      label: "My Medication",
-      desc: "Previously purchased medication",
-      href: "/account/medication",
     },
     {
       icon: FileText,
