@@ -1,7 +1,12 @@
 {
-  "name": "crown-pharmacy",
-  "compatibility_date": "2026-03-12",
-  "assets": {
-    "directory": "./dist",
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "crown-phamacy",
+  "compatibility_date": "2025-09-27",
+  "observability": {
+    "enabled": true,
   },
+  "assets": {
+    "directory": "dist",
+  },
+  "compatibility_flags": ["nodejs_compat"],
 }

@@ -6,7 +6,7 @@ export default function PoweredBy() {
       href="tel:+263772282831"
       className="text-white bg-primary px-2 py-1 rounded-full"
     >
-      💡powered by Corporate Technology
+      💡Powered by Corporate Technology
     </a>
   );
 }
