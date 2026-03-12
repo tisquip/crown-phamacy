@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 20% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 20% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 20% 15%;
+
+    --primary: 288 53% 34%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 186 77% 96%;
+    --secondary-foreground: 186 77% 28%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 210 10% 45%;
+
+    --accent: 186 77% 28%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --price: 0 100% 40%;
+    --price-foreground: 0 0% 100%;
+
+    --promotion: 145 63% 42%;
+    --promotion-foreground: 0 0% 100%;
+
+    --topbar: 288 53% 24%;
+    --topbar-foreground: 0 0% 100%;
+
+    --navbar: 0 0% 100%;
+    --navbar-foreground: 210 20% 15%;
+
+    --badge-sale: 0 100% 50%;
+    --badge-new: 186 77% 40%;
+
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 288 53% 34%;
+
+    --radius: 0.375rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 210 20% 8%;
+    --foreground: 0 0% 95%;
+    --card: 210 20% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 210 20% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 288 53% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 186 77% 15%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 210 20% 18%;
+    --muted-foreground: 210 10% 60%;
+    --accent: 186 77% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 20% 22%;
+    --input: 210 20% 22%;
+    --ring: 288 53% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+
+@layer components {
+  .price-text {
+    @apply text-price font-bold;
+  }
+  .promotion-badge {
+    @apply bg-promotion text-promotion-foreground text-xs px-2 py-0.5 rounded;
+  }
+  .sale-badge {
+    @apply absolute top-2 left-2 bg-badge-sale text-white text-xs font-bold rounded-full w-10 h-10 flex items-center justify-center;
+  }
+}
