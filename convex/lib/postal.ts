@@ -37,7 +37,7 @@ export async function sendEmailViaPostal(
   const serverUrl = process.env.POSTAL_SERVER_URL;
   const apiKey = process.env.POSTAL_API_KEY;
   const fromAddress = process.env.POSTAL_FROM_ADDRESS;
-  const fromName = process.env.POSTAL_FROM_NAME ?? "Botha Resource Management";
+  const fromName = process.env.POSTAL_FROM_NAME ?? "Crown Pharmacy Website";
 
   if (!serverUrl || !apiKey || !fromAddress) {
     throw new Error(
