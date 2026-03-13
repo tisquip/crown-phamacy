@@ -18,6 +18,7 @@ import {
   Mail,
   PanelLeftClose,
   PanelLeftOpen,
+  Layers,
 } from "lucide-react";
 import logoSymbol from "@/assets/logo-symbol.png";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
@@ -45,6 +46,11 @@ const adminNav = [
   { label: "Blog Posts", href: "/admin/BlogPosts", icon: Newspaper },
   { label: "Newsletter", href: "/admin/Newsletter", icon: Mail },
   { label: "Bulk Upload", href: "/admin/BulkUpload", icon: FileSpreadsheet },
+  {
+    label: "Bulk Product Ops",
+    href: "/admin/ProductBulkOps",
+    icon: Layers,
+  },
   { label: "Settings", href: "/admin/Settings", icon: Settings },
 ];
 
