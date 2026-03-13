@@ -16,6 +16,7 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ProductDetailModal } from "@/components/ProductDetailModal";
 
 // ── Search params schema ──────────────────────────────────────────────────────
 const sortOptions = [
@@ -50,7 +51,13 @@ type EnrichedProduct = Doc<"products"> & {
 };
 
 // ── Reusable product card for real data ───────────────────────────────────────
-function RealProductCard({ product }: { product: EnrichedProduct }) {
+function RealProductCard({
+  product,
+  onQuickView,
+}: {
+  product: EnrichedProduct;
+  onQuickView: (id: Id<"products">) => void;
+}) {
   const { addToCart, isAuthenticated } = useCart();
   const { isLoggedIn, isInWishlist, addToWishlist, removeFromWishlist } =
     useAuth();
@@ -117,11 +124,10 @@ function RealProductCard({ product }: { product: EnrichedProduct }) {
         !product.inStock && "opacity-75",
       )}
     >
-      <Link
-        to="/Product/$id"
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        params={{ id: product._id } as any}
-        className="relative p-4 flex items-center justify-center"
+      <button
+        onClick={() => onQuickView(product._id as Id<"products">)}
+        className="relative p-4 flex items-center justify-center text-left w-full"
+        aria-label={`Quick view ${product.name}`}
       >
         {hasPromo && <span className="sale-badge z-10">-{promoPercent}%</span>}
         {!product.inStock && (
@@ -139,16 +145,21 @@ function RealProductCard({ product }: { product: EnrichedProduct }) {
             !product.inStock && "grayscale",
           )}
         />
-        <button
-          onClick={handleWishlist}
+        <span
+          role="button"
+          tabIndex={-1}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleWishlist(e);
+          }}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
           className="absolute top-2 right-2 z-10"
         >
           <Heart
             className={`w-4 h-4 ${wishlisted ? "fill-price text-price" : "text-muted-foreground hover:text-price"}`}
           />
-        </button>
-      </Link>
+        </span>
+      </button>
 
       <div className="px-3 pb-3 flex flex-col flex-1">
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
@@ -220,6 +231,8 @@ function RealProductCard({ product }: { product: EnrichedProduct }) {
 function RouteComponent() {
   const searchParams = Route.useSearch();
   const navigate = useNavigate();
+  const [selectedProductId, setSelectedProductId] =
+    useState<Id<"products"> | null>(null);
 
   const navigateSearch = useCallback(
     (search: Partial<ProductsSearch>) => {
@@ -709,7 +722,11 @@ function RouteComponent() {
                 <>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {visibleProducts.map((product) => (
-                      <RealProductCard key={product._id} product={product} />
+                      <RealProductCard
+                        key={product._id}
+                        product={product}
+                        onQuickView={setSelectedProductId}
+                      />
                     ))}
                   </div>
 
@@ -746,6 +763,11 @@ function RouteComponent() {
           </div>
         </div>
       </div>
+
+      <ProductDetailModal
+        productId={selectedProductId}
+        onClose={() => setSelectedProductId(null)}
+      />
 
       {/* Mobile filter bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border p-2 flex gap-2 z-40">
