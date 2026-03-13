@@ -192,7 +192,7 @@ export const addToCategory = mutation({
     if (!userId) throw new Error("Not authenticated");
     const existing = await ctx.db.get(args.id);
     if (!existing) throw new Error("Product not found");
-    const current: string[] = existing.productCategoryIds ?? [];
+    const current = existing.productCategoryIds ?? [];
     if (!current.includes(args.categoryId)) {
       await ctx.db.patch(args.id, {
         productCategoryIds: [...current, args.categoryId],

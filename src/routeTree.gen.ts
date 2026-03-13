@@ -8,891 +8,892 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as TermsRouteImport } from "./routes/Terms";
-import { Route as ProductsRouteImport } from "./routes/Products";
-import { Route as PrivacyRouteImport } from "./routes/Privacy";
-import { Route as PrescriptionRouteImport } from "./routes/Prescription";
-import { Route as LoginRouteImport } from "./routes/Login";
-import { Route as CheckoutRouteImport } from "./routes/Checkout";
-import { Route as CartRouteImport } from "./routes/Cart";
-import { Route as BranchesRouteImport } from "./routes/Branches";
-import { Route as BlogsRouteImport } from "./routes/Blogs";
-import { Route as AdminRouteRouteImport } from "./routes/admin/route";
-import { Route as AccountRouteRouteImport } from "./routes/account/route";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as AdminIndexRouteImport } from "./routes/admin/index";
-import { Route as AccountIndexRouteImport } from "./routes/account/index";
-import { Route as AdminSettingsRouteImport } from "./routes/admin/Settings";
-import { Route as AdminProductsRouteImport } from "./routes/admin/Products";
-import { Route as AdminProductCategoriesRouteImport } from "./routes/admin/ProductCategories";
-import { Route as AdminPrescriptionsRouteImport } from "./routes/admin/Prescriptions";
-import { Route as AdminPaymentTransactionsRouteImport } from "./routes/admin/PaymentTransactions";
-import { Route as AdminOrdersRouteImport } from "./routes/admin/Orders";
-import { Route as AdminNewsletterRouteImport } from "./routes/admin/Newsletter";
-import { Route as AdminHomeSectionsRouteImport } from "./routes/admin/Home-Sections";
-import { Route as AdminClientsRouteImport } from "./routes/admin/Clients";
-import { Route as AdminCarouselRouteImport } from "./routes/admin/Carousel";
-import { Route as AdminBulkUploadRouteImport } from "./routes/admin/BulkUpload";
-import { Route as AdminProductBulkOpsRouteImport } from "./routes/admin/ProductBulkOps";
-import { Route as AdminBrandsRouteImport } from "./routes/admin/Brands";
-import { Route as AdminBranchesRouteImport } from "./routes/admin/Branches";
-import { Route as AdminBlogPostsRouteImport } from "./routes/admin/BlogPosts";
-import { Route as AdminAccountRouteImport } from "./routes/admin/Account";
-import { Route as AccountWishlistRouteImport } from "./routes/account/Wishlist";
-import { Route as AccountTransactionsRouteImport } from "./routes/account/Transactions";
-import { Route as AccountPurchasesRouteImport } from "./routes/account/Purchases";
-import { Route as AccountPreviouslyPurchasedRouteImport } from "./routes/account/PreviouslyPurchased";
-import { Route as AccountPrescriptionsRouteImport } from "./routes/account/Prescriptions";
-import { Route as ProductIdRouteImport } from "./routes/Product.$id";
-import { Route as BlogSlugRouteImport } from "./routes/Blog.$slug";
-import { Route as AdminPrescriptionIdRouteImport } from "./routes/admin/Prescription.$id";
-import { Route as AdminOrderIdRouteImport } from "./routes/admin/Order.$id";
-import { Route as AdminClientIdRouteImport } from "./routes/admin/Client.$id";
-import { Route as AdminBlogPostIdRouteImport } from "./routes/admin/BlogPost.$id";
-import { Route as AccountPurchaseIdRouteImport } from "./routes/account/Purchase.$id";
-import { Route as AccountPrescriptionOrderIdRouteImport } from "./routes/account/PrescriptionOrder.$id";
-import { Route as AccountPrescriptionIdRouteImport } from "./routes/account/Prescription.$id";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/Terms'
+import { Route as ProductsRouteImport } from './routes/Products'
+import { Route as PrivacyRouteImport } from './routes/Privacy'
+import { Route as PrescriptionRouteImport } from './routes/Prescription'
+import { Route as LoginRouteImport } from './routes/Login'
+import { Route as CheckoutRouteImport } from './routes/Checkout'
+import { Route as CartRouteImport } from './routes/Cart'
+import { Route as BranchesRouteImport } from './routes/Branches'
+import { Route as BlogsRouteImport } from './routes/Blogs'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as AccountRouteRouteImport } from './routes/account/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AccountIndexRouteImport } from './routes/account/index'
+import { Route as AdminSettingsRouteImport } from './routes/admin/Settings'
+import { Route as AdminProductsRouteImport } from './routes/admin/Products'
+import { Route as AdminProductCategoriesRouteImport } from './routes/admin/ProductCategories'
+import { Route as AdminProductBulkOpsRouteImport } from './routes/admin/ProductBulkOps'
+import { Route as AdminPrescriptionsRouteImport } from './routes/admin/Prescriptions'
+import { Route as AdminPaymentTransactionsRouteImport } from './routes/admin/PaymentTransactions'
+import { Route as AdminOrdersRouteImport } from './routes/admin/Orders'
+import { Route as AdminNewsletterRouteImport } from './routes/admin/Newsletter'
+import { Route as AdminHomeSectionsRouteImport } from './routes/admin/Home-Sections'
+import { Route as AdminClientsRouteImport } from './routes/admin/Clients'
+import { Route as AdminCarouselRouteImport } from './routes/admin/Carousel'
+import { Route as AdminBulkUploadRouteImport } from './routes/admin/BulkUpload'
+import { Route as AdminBrandsRouteImport } from './routes/admin/Brands'
+import { Route as AdminBranchesRouteImport } from './routes/admin/Branches'
+import { Route as AdminBlogPostsRouteImport } from './routes/admin/BlogPosts'
+import { Route as AdminAccountRouteImport } from './routes/admin/Account'
+import { Route as AccountWishlistRouteImport } from './routes/account/Wishlist'
+import { Route as AccountTransactionsRouteImport } from './routes/account/Transactions'
+import { Route as AccountPurchasesRouteImport } from './routes/account/Purchases'
+import { Route as AccountPreviouslyPurchasedRouteImport } from './routes/account/PreviouslyPurchased'
+import { Route as AccountPrescriptionsRouteImport } from './routes/account/Prescriptions'
+import { Route as ProductIdRouteImport } from './routes/Product.$id'
+import { Route as BlogSlugRouteImport } from './routes/Blog.$slug'
+import { Route as AdminPrescriptionIdRouteImport } from './routes/admin/Prescription.$id'
+import { Route as AdminOrderIdRouteImport } from './routes/admin/Order.$id'
+import { Route as AdminClientIdRouteImport } from './routes/admin/Client.$id'
+import { Route as AdminBlogPostIdRouteImport } from './routes/admin/BlogPost.$id'
+import { Route as AccountPurchaseIdRouteImport } from './routes/account/Purchase.$id'
+import { Route as AccountPrescriptionOrderIdRouteImport } from './routes/account/PrescriptionOrder.$id'
+import { Route as AccountPrescriptionIdRouteImport } from './routes/account/Prescription.$id'
 
 const TermsRoute = TermsRouteImport.update({
-  id: "/Terms",
-  path: "/Terms",
+  id: '/Terms',
+  path: '/Terms',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProductsRoute = ProductsRouteImport.update({
-  id: "/Products",
-  path: "/Products",
+  id: '/Products',
+  path: '/Products',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
-  id: "/Privacy",
-  path: "/Privacy",
+  id: '/Privacy',
+  path: '/Privacy',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PrescriptionRoute = PrescriptionRouteImport.update({
-  id: "/Prescription",
-  path: "/Prescription",
+  id: '/Prescription',
+  path: '/Prescription',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const LoginRoute = LoginRouteImport.update({
-  id: "/Login",
-  path: "/Login",
+  id: '/Login',
+  path: '/Login',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
-  id: "/Checkout",
-  path: "/Checkout",
+  id: '/Checkout',
+  path: '/Checkout',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const CartRoute = CartRouteImport.update({
-  id: "/Cart",
-  path: "/Cart",
+  id: '/Cart',
+  path: '/Cart',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const BranchesRoute = BranchesRouteImport.update({
-  id: "/Branches",
-  path: "/Branches",
+  id: '/Branches',
+  path: '/Branches',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const BlogsRoute = BlogsRouteImport.update({
-  id: "/Blogs",
-  path: "/Blogs",
+  id: '/Blogs',
+  path: '/Blogs',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AdminRouteRoute = AdminRouteRouteImport.update({
-  id: "/admin",
-  path: "/admin",
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AccountRouteRoute = AccountRouteRouteImport.update({
-  id: "/account",
-  path: "/account",
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AccountIndexRoute = AccountIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => AccountRouteRoute,
-} as any);
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: "/Settings",
-  path: "/Settings",
+  id: '/Settings',
+  path: '/Settings',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
-  id: "/Products",
-  path: "/Products",
+  id: '/Products',
+  path: '/Products',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminProductCategoriesRoute = AdminProductCategoriesRouteImport.update({
-  id: "/ProductCategories",
-  path: "/ProductCategories",
+  id: '/ProductCategories',
+  path: '/ProductCategories',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
+const AdminProductBulkOpsRoute = AdminProductBulkOpsRouteImport.update({
+  id: '/ProductBulkOps',
+  path: '/ProductBulkOps',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminPrescriptionsRoute = AdminPrescriptionsRouteImport.update({
-  id: "/Prescriptions",
-  path: "/Prescriptions",
+  id: '/Prescriptions',
+  path: '/Prescriptions',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminPaymentTransactionsRoute =
   AdminPaymentTransactionsRouteImport.update({
-    id: "/PaymentTransactions",
-    path: "/PaymentTransactions",
+    id: '/PaymentTransactions',
+    path: '/PaymentTransactions',
     getParentRoute: () => AdminRouteRoute,
-  } as any);
+  } as any)
 const AdminOrdersRoute = AdminOrdersRouteImport.update({
-  id: "/Orders",
-  path: "/Orders",
+  id: '/Orders',
+  path: '/Orders',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminNewsletterRoute = AdminNewsletterRouteImport.update({
-  id: "/Newsletter",
-  path: "/Newsletter",
+  id: '/Newsletter',
+  path: '/Newsletter',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminHomeSectionsRoute = AdminHomeSectionsRouteImport.update({
-  id: "/Home-Sections",
-  path: "/Home-Sections",
+  id: '/Home-Sections',
+  path: '/Home-Sections',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminClientsRoute = AdminClientsRouteImport.update({
-  id: "/Clients",
-  path: "/Clients",
+  id: '/Clients',
+  path: '/Clients',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminCarouselRoute = AdminCarouselRouteImport.update({
-  id: "/Carousel",
-  path: "/Carousel",
+  id: '/Carousel',
+  path: '/Carousel',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminBulkUploadRoute = AdminBulkUploadRouteImport.update({
-  id: "/BulkUpload",
-  path: "/BulkUpload",
+  id: '/BulkUpload',
+  path: '/BulkUpload',
   getParentRoute: () => AdminRouteRoute,
-} as any);
-const AdminProductBulkOpsRoute = AdminProductBulkOpsRouteImport.update({
-  id: "/ProductBulkOps",
-  path: "/ProductBulkOps",
-  getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminBrandsRoute = AdminBrandsRouteImport.update({
-  id: "/Brands",
-  path: "/Brands",
+  id: '/Brands',
+  path: '/Brands',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminBranchesRoute = AdminBranchesRouteImport.update({
-  id: "/Branches",
-  path: "/Branches",
+  id: '/Branches',
+  path: '/Branches',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminBlogPostsRoute = AdminBlogPostsRouteImport.update({
-  id: "/BlogPosts",
-  path: "/BlogPosts",
+  id: '/BlogPosts',
+  path: '/BlogPosts',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminAccountRoute = AdminAccountRouteImport.update({
-  id: "/Account",
-  path: "/Account",
+  id: '/Account',
+  path: '/Account',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AccountWishlistRoute = AccountWishlistRouteImport.update({
-  id: "/Wishlist",
-  path: "/Wishlist",
+  id: '/Wishlist',
+  path: '/Wishlist',
   getParentRoute: () => AccountRouteRoute,
-} as any);
+} as any)
 const AccountTransactionsRoute = AccountTransactionsRouteImport.update({
-  id: "/Transactions",
-  path: "/Transactions",
+  id: '/Transactions',
+  path: '/Transactions',
   getParentRoute: () => AccountRouteRoute,
-} as any);
+} as any)
 const AccountPurchasesRoute = AccountPurchasesRouteImport.update({
-  id: "/Purchases",
-  path: "/Purchases",
+  id: '/Purchases',
+  path: '/Purchases',
   getParentRoute: () => AccountRouteRoute,
-} as any);
+} as any)
 const AccountPreviouslyPurchasedRoute =
   AccountPreviouslyPurchasedRouteImport.update({
-    id: "/PreviouslyPurchased",
-    path: "/PreviouslyPurchased",
+    id: '/PreviouslyPurchased',
+    path: '/PreviouslyPurchased',
     getParentRoute: () => AccountRouteRoute,
-  } as any);
+  } as any)
 const AccountPrescriptionsRoute = AccountPrescriptionsRouteImport.update({
-  id: "/Prescriptions",
-  path: "/Prescriptions",
+  id: '/Prescriptions',
+  path: '/Prescriptions',
   getParentRoute: () => AccountRouteRoute,
-} as any);
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
-  id: "/Product/$id",
-  path: "/Product/$id",
+  id: '/Product/$id',
+  path: '/Product/$id',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: "/Blog/$slug",
-  path: "/Blog/$slug",
+  id: '/Blog/$slug',
+  path: '/Blog/$slug',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AdminPrescriptionIdRoute = AdminPrescriptionIdRouteImport.update({
-  id: "/Prescription/$id",
-  path: "/Prescription/$id",
+  id: '/Prescription/$id',
+  path: '/Prescription/$id',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminOrderIdRoute = AdminOrderIdRouteImport.update({
-  id: "/Order/$id",
-  path: "/Order/$id",
+  id: '/Order/$id',
+  path: '/Order/$id',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminClientIdRoute = AdminClientIdRouteImport.update({
-  id: "/Client/$id",
-  path: "/Client/$id",
+  id: '/Client/$id',
+  path: '/Client/$id',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AdminBlogPostIdRoute = AdminBlogPostIdRouteImport.update({
-  id: "/BlogPost/$id",
-  path: "/BlogPost/$id",
+  id: '/BlogPost/$id',
+  path: '/BlogPost/$id',
   getParentRoute: () => AdminRouteRoute,
-} as any);
+} as any)
 const AccountPurchaseIdRoute = AccountPurchaseIdRouteImport.update({
-  id: "/Purchase/$id",
-  path: "/Purchase/$id",
+  id: '/Purchase/$id',
+  path: '/Purchase/$id',
   getParentRoute: () => AccountRouteRoute,
-} as any);
+} as any)
 const AccountPrescriptionOrderIdRoute =
   AccountPrescriptionOrderIdRouteImport.update({
-    id: "/PrescriptionOrder/$id",
-    path: "/PrescriptionOrder/$id",
+    id: '/PrescriptionOrder/$id',
+    path: '/PrescriptionOrder/$id',
     getParentRoute: () => AccountRouteRoute,
-  } as any);
+  } as any)
 const AccountPrescriptionIdRoute = AccountPrescriptionIdRouteImport.update({
-  id: "/Prescription/$id",
-  path: "/Prescription/$id",
+  id: '/Prescription/$id',
+  path: '/Prescription/$id',
   getParentRoute: () => AccountRouteRoute,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/account": typeof AccountRouteRouteWithChildren;
-  "/admin": typeof AdminRouteRouteWithChildren;
-  "/Blogs": typeof BlogsRoute;
-  "/Branches": typeof BranchesRoute;
-  "/Cart": typeof CartRoute;
-  "/Checkout": typeof CheckoutRoute;
-  "/Login": typeof LoginRoute;
-  "/Prescription": typeof PrescriptionRoute;
-  "/Privacy": typeof PrivacyRoute;
-  "/Products": typeof ProductsRoute;
-  "/Terms": typeof TermsRoute;
-  "/Blog/$slug": typeof BlogSlugRoute;
-  "/Product/$id": typeof ProductIdRoute;
-  "/account/Prescriptions": typeof AccountPrescriptionsRoute;
-  "/account/PreviouslyPurchased": typeof AccountPreviouslyPurchasedRoute;
-  "/account/Purchases": typeof AccountPurchasesRoute;
-  "/account/Transactions": typeof AccountTransactionsRoute;
-  "/account/Wishlist": typeof AccountWishlistRoute;
-  "/admin/Account": typeof AdminAccountRoute;
-  "/admin/BlogPosts": typeof AdminBlogPostsRoute;
-  "/admin/Branches": typeof AdminBranchesRoute;
-  "/admin/Brands": typeof AdminBrandsRoute;
-  "/admin/BulkUpload": typeof AdminBulkUploadRoute;
-  "/admin/Carousel": typeof AdminCarouselRoute;
-  "/admin/Clients": typeof AdminClientsRoute;
-  "/admin/Home-Sections": typeof AdminHomeSectionsRoute;
-  "/admin/Newsletter": typeof AdminNewsletterRoute;
-  "/admin/Orders": typeof AdminOrdersRoute;
-  "/admin/PaymentTransactions": typeof AdminPaymentTransactionsRoute;
-  "/admin/Prescriptions": typeof AdminPrescriptionsRoute;
-  "/admin/ProductCategories": typeof AdminProductCategoriesRoute;
-  "/admin/Products": typeof AdminProductsRoute;
-  "/admin/Settings": typeof AdminSettingsRoute;
-  "/account/": typeof AccountIndexRoute;
-  "/admin/": typeof AdminIndexRoute;
-  "/account/Prescription/$id": typeof AccountPrescriptionIdRoute;
-  "/account/PrescriptionOrder/$id": typeof AccountPrescriptionOrderIdRoute;
-  "/account/Purchase/$id": typeof AccountPurchaseIdRoute;
-  "/admin/BlogPost/$id": typeof AdminBlogPostIdRoute;
-  "/admin/Client/$id": typeof AdminClientIdRoute;
-  "/admin/Order/$id": typeof AdminOrderIdRoute;
-  "/admin/Prescription/$id": typeof AdminPrescriptionIdRoute;
+  '/': typeof IndexRoute
+  '/account': typeof AccountRouteRouteWithChildren
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/Blogs': typeof BlogsRoute
+  '/Branches': typeof BranchesRoute
+  '/Cart': typeof CartRoute
+  '/Checkout': typeof CheckoutRoute
+  '/Login': typeof LoginRoute
+  '/Prescription': typeof PrescriptionRoute
+  '/Privacy': typeof PrivacyRoute
+  '/Products': typeof ProductsRoute
+  '/Terms': typeof TermsRoute
+  '/Blog/$slug': typeof BlogSlugRoute
+  '/Product/$id': typeof ProductIdRoute
+  '/account/Prescriptions': typeof AccountPrescriptionsRoute
+  '/account/PreviouslyPurchased': typeof AccountPreviouslyPurchasedRoute
+  '/account/Purchases': typeof AccountPurchasesRoute
+  '/account/Transactions': typeof AccountTransactionsRoute
+  '/account/Wishlist': typeof AccountWishlistRoute
+  '/admin/Account': typeof AdminAccountRoute
+  '/admin/BlogPosts': typeof AdminBlogPostsRoute
+  '/admin/Branches': typeof AdminBranchesRoute
+  '/admin/Brands': typeof AdminBrandsRoute
+  '/admin/BulkUpload': typeof AdminBulkUploadRoute
+  '/admin/Carousel': typeof AdminCarouselRoute
+  '/admin/Clients': typeof AdminClientsRoute
+  '/admin/Home-Sections': typeof AdminHomeSectionsRoute
+  '/admin/Newsletter': typeof AdminNewsletterRoute
+  '/admin/Orders': typeof AdminOrdersRoute
+  '/admin/PaymentTransactions': typeof AdminPaymentTransactionsRoute
+  '/admin/Prescriptions': typeof AdminPrescriptionsRoute
+  '/admin/ProductBulkOps': typeof AdminProductBulkOpsRoute
+  '/admin/ProductCategories': typeof AdminProductCategoriesRoute
+  '/admin/Products': typeof AdminProductsRoute
+  '/admin/Settings': typeof AdminSettingsRoute
+  '/account/': typeof AccountIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/account/Prescription/$id': typeof AccountPrescriptionIdRoute
+  '/account/PrescriptionOrder/$id': typeof AccountPrescriptionOrderIdRoute
+  '/account/Purchase/$id': typeof AccountPurchaseIdRoute
+  '/admin/BlogPost/$id': typeof AdminBlogPostIdRoute
+  '/admin/Client/$id': typeof AdminClientIdRoute
+  '/admin/Order/$id': typeof AdminOrderIdRoute
+  '/admin/Prescription/$id': typeof AdminPrescriptionIdRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/Blogs": typeof BlogsRoute;
-  "/Branches": typeof BranchesRoute;
-  "/Cart": typeof CartRoute;
-  "/Checkout": typeof CheckoutRoute;
-  "/Login": typeof LoginRoute;
-  "/Prescription": typeof PrescriptionRoute;
-  "/Privacy": typeof PrivacyRoute;
-  "/Products": typeof ProductsRoute;
-  "/Terms": typeof TermsRoute;
-  "/Blog/$slug": typeof BlogSlugRoute;
-  "/Product/$id": typeof ProductIdRoute;
-  "/account/Prescriptions": typeof AccountPrescriptionsRoute;
-  "/account/PreviouslyPurchased": typeof AccountPreviouslyPurchasedRoute;
-  "/account/Purchases": typeof AccountPurchasesRoute;
-  "/account/Transactions": typeof AccountTransactionsRoute;
-  "/account/Wishlist": typeof AccountWishlistRoute;
-  "/admin/Account": typeof AdminAccountRoute;
-  "/admin/BlogPosts": typeof AdminBlogPostsRoute;
-  "/admin/Branches": typeof AdminBranchesRoute;
-  "/admin/Brands": typeof AdminBrandsRoute;
-  "/admin/BulkUpload": typeof AdminBulkUploadRoute;
-  "/admin/Carousel": typeof AdminCarouselRoute;
-  "/admin/Clients": typeof AdminClientsRoute;
-  "/admin/Home-Sections": typeof AdminHomeSectionsRoute;
-  "/admin/Newsletter": typeof AdminNewsletterRoute;
-  "/admin/Orders": typeof AdminOrdersRoute;
-  "/admin/PaymentTransactions": typeof AdminPaymentTransactionsRoute;
-  "/admin/Prescriptions": typeof AdminPrescriptionsRoute;
-  "/admin/ProductBulkOps": typeof AdminProductBulkOpsRoute;
-  "/admin/ProductCategories": typeof AdminProductCategoriesRoute;
-  "/admin/Products": typeof AdminProductsRoute;
-  "/admin/Settings": typeof AdminSettingsRoute;
-  "/account": typeof AccountIndexRoute;
-  "/admin": typeof AdminIndexRoute;
-  "/account/Prescription/$id": typeof AccountPrescriptionIdRoute;
-  "/account/PrescriptionOrder/$id": typeof AccountPrescriptionOrderIdRoute;
-  "/account/Purchase/$id": typeof AccountPurchaseIdRoute;
-  "/admin/BlogPost/$id": typeof AdminBlogPostIdRoute;
-  "/admin/Client/$id": typeof AdminClientIdRoute;
-  "/admin/Order/$id": typeof AdminOrderIdRoute;
-  "/admin/Prescription/$id": typeof AdminPrescriptionIdRoute;
+  '/': typeof IndexRoute
+  '/Blogs': typeof BlogsRoute
+  '/Branches': typeof BranchesRoute
+  '/Cart': typeof CartRoute
+  '/Checkout': typeof CheckoutRoute
+  '/Login': typeof LoginRoute
+  '/Prescription': typeof PrescriptionRoute
+  '/Privacy': typeof PrivacyRoute
+  '/Products': typeof ProductsRoute
+  '/Terms': typeof TermsRoute
+  '/Blog/$slug': typeof BlogSlugRoute
+  '/Product/$id': typeof ProductIdRoute
+  '/account/Prescriptions': typeof AccountPrescriptionsRoute
+  '/account/PreviouslyPurchased': typeof AccountPreviouslyPurchasedRoute
+  '/account/Purchases': typeof AccountPurchasesRoute
+  '/account/Transactions': typeof AccountTransactionsRoute
+  '/account/Wishlist': typeof AccountWishlistRoute
+  '/admin/Account': typeof AdminAccountRoute
+  '/admin/BlogPosts': typeof AdminBlogPostsRoute
+  '/admin/Branches': typeof AdminBranchesRoute
+  '/admin/Brands': typeof AdminBrandsRoute
+  '/admin/BulkUpload': typeof AdminBulkUploadRoute
+  '/admin/Carousel': typeof AdminCarouselRoute
+  '/admin/Clients': typeof AdminClientsRoute
+  '/admin/Home-Sections': typeof AdminHomeSectionsRoute
+  '/admin/Newsletter': typeof AdminNewsletterRoute
+  '/admin/Orders': typeof AdminOrdersRoute
+  '/admin/PaymentTransactions': typeof AdminPaymentTransactionsRoute
+  '/admin/Prescriptions': typeof AdminPrescriptionsRoute
+  '/admin/ProductBulkOps': typeof AdminProductBulkOpsRoute
+  '/admin/ProductCategories': typeof AdminProductCategoriesRoute
+  '/admin/Products': typeof AdminProductsRoute
+  '/admin/Settings': typeof AdminSettingsRoute
+  '/account': typeof AccountIndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/account/Prescription/$id': typeof AccountPrescriptionIdRoute
+  '/account/PrescriptionOrder/$id': typeof AccountPrescriptionOrderIdRoute
+  '/account/Purchase/$id': typeof AccountPurchaseIdRoute
+  '/admin/BlogPost/$id': typeof AdminBlogPostIdRoute
+  '/admin/Client/$id': typeof AdminClientIdRoute
+  '/admin/Order/$id': typeof AdminOrderIdRoute
+  '/admin/Prescription/$id': typeof AdminPrescriptionIdRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/account": typeof AccountRouteRouteWithChildren;
-  "/admin": typeof AdminRouteRouteWithChildren;
-  "/Blogs": typeof BlogsRoute;
-  "/Branches": typeof BranchesRoute;
-  "/Cart": typeof CartRoute;
-  "/Checkout": typeof CheckoutRoute;
-  "/Login": typeof LoginRoute;
-  "/Prescription": typeof PrescriptionRoute;
-  "/Privacy": typeof PrivacyRoute;
-  "/Products": typeof ProductsRoute;
-  "/Terms": typeof TermsRoute;
-  "/Blog/$slug": typeof BlogSlugRoute;
-  "/Product/$id": typeof ProductIdRoute;
-  "/account/Prescriptions": typeof AccountPrescriptionsRoute;
-  "/account/PreviouslyPurchased": typeof AccountPreviouslyPurchasedRoute;
-  "/account/Purchases": typeof AccountPurchasesRoute;
-  "/account/Transactions": typeof AccountTransactionsRoute;
-  "/account/Wishlist": typeof AccountWishlistRoute;
-  "/admin/Account": typeof AdminAccountRoute;
-  "/admin/BlogPosts": typeof AdminBlogPostsRoute;
-  "/admin/Branches": typeof AdminBranchesRoute;
-  "/admin/Brands": typeof AdminBrandsRoute;
-  "/admin/BulkUpload": typeof AdminBulkUploadRoute;
-  "/admin/Carousel": typeof AdminCarouselRoute;
-  "/admin/Clients": typeof AdminClientsRoute;
-  "/admin/Home-Sections": typeof AdminHomeSectionsRoute;
-  "/admin/Newsletter": typeof AdminNewsletterRoute;
-  "/admin/Orders": typeof AdminOrdersRoute;
-  "/admin/PaymentTransactions": typeof AdminPaymentTransactionsRoute;
-  "/admin/Prescriptions": typeof AdminPrescriptionsRoute;
-  "/admin/ProductBulkOps": typeof AdminProductBulkOpsRoute;
-  "/admin/ProductCategories": typeof AdminProductCategoriesRoute;
-  "/admin/Products": typeof AdminProductsRoute;
-  "/admin/Settings": typeof AdminSettingsRoute;
-  "/account/": typeof AccountIndexRoute;
-  "/admin/": typeof AdminIndexRoute;
-  "/account/Prescription/$id": typeof AccountPrescriptionIdRoute;
-  "/account/PrescriptionOrder/$id": typeof AccountPrescriptionOrderIdRoute;
-  "/account/Purchase/$id": typeof AccountPurchaseIdRoute;
-  "/admin/BlogPost/$id": typeof AdminBlogPostIdRoute;
-  "/admin/Client/$id": typeof AdminClientIdRoute;
-  "/admin/Order/$id": typeof AdminOrderIdRoute;
-  "/admin/Prescription/$id": typeof AdminPrescriptionIdRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/account': typeof AccountRouteRouteWithChildren
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/Blogs': typeof BlogsRoute
+  '/Branches': typeof BranchesRoute
+  '/Cart': typeof CartRoute
+  '/Checkout': typeof CheckoutRoute
+  '/Login': typeof LoginRoute
+  '/Prescription': typeof PrescriptionRoute
+  '/Privacy': typeof PrivacyRoute
+  '/Products': typeof ProductsRoute
+  '/Terms': typeof TermsRoute
+  '/Blog/$slug': typeof BlogSlugRoute
+  '/Product/$id': typeof ProductIdRoute
+  '/account/Prescriptions': typeof AccountPrescriptionsRoute
+  '/account/PreviouslyPurchased': typeof AccountPreviouslyPurchasedRoute
+  '/account/Purchases': typeof AccountPurchasesRoute
+  '/account/Transactions': typeof AccountTransactionsRoute
+  '/account/Wishlist': typeof AccountWishlistRoute
+  '/admin/Account': typeof AdminAccountRoute
+  '/admin/BlogPosts': typeof AdminBlogPostsRoute
+  '/admin/Branches': typeof AdminBranchesRoute
+  '/admin/Brands': typeof AdminBrandsRoute
+  '/admin/BulkUpload': typeof AdminBulkUploadRoute
+  '/admin/Carousel': typeof AdminCarouselRoute
+  '/admin/Clients': typeof AdminClientsRoute
+  '/admin/Home-Sections': typeof AdminHomeSectionsRoute
+  '/admin/Newsletter': typeof AdminNewsletterRoute
+  '/admin/Orders': typeof AdminOrdersRoute
+  '/admin/PaymentTransactions': typeof AdminPaymentTransactionsRoute
+  '/admin/Prescriptions': typeof AdminPrescriptionsRoute
+  '/admin/ProductBulkOps': typeof AdminProductBulkOpsRoute
+  '/admin/ProductCategories': typeof AdminProductCategoriesRoute
+  '/admin/Products': typeof AdminProductsRoute
+  '/admin/Settings': typeof AdminSettingsRoute
+  '/account/': typeof AccountIndexRoute
+  '/admin/': typeof AdminIndexRoute
+  '/account/Prescription/$id': typeof AccountPrescriptionIdRoute
+  '/account/PrescriptionOrder/$id': typeof AccountPrescriptionOrderIdRoute
+  '/account/Purchase/$id': typeof AccountPurchaseIdRoute
+  '/admin/BlogPost/$id': typeof AdminBlogPostIdRoute
+  '/admin/Client/$id': typeof AdminClientIdRoute
+  '/admin/Order/$id': typeof AdminOrderIdRoute
+  '/admin/Prescription/$id': typeof AdminPrescriptionIdRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/account"
-    | "/admin"
-    | "/Blogs"
-    | "/Branches"
-    | "/Cart"
-    | "/Checkout"
-    | "/Login"
-    | "/Prescription"
-    | "/Privacy"
-    | "/Products"
-    | "/Terms"
-    | "/Blog/$slug"
-    | "/Product/$id"
-    | "/account/Prescriptions"
-    | "/account/PreviouslyPurchased"
-    | "/account/Purchases"
-    | "/account/Transactions"
-    | "/account/Wishlist"
-    | "/admin/Account"
-    | "/admin/BlogPosts"
-    | "/admin/Branches"
-    | "/admin/Brands"
-    | "/admin/BulkUpload"
-    | "/admin/Carousel"
-    | "/admin/Clients"
-    | "/admin/Home-Sections"
-    | "/admin/Newsletter"
-    | "/admin/Orders"
-    | "/admin/PaymentTransactions"
-    | "/admin/Prescriptions"
-    | "/admin/ProductBulkOps"
-    | "/admin/ProductCategories"
-    | "/admin/Products"
-    | "/admin/Settings"
-    | "/account/"
-    | "/admin/"
-    | "/account/Prescription/$id"
-    | "/account/PrescriptionOrder/$id"
-    | "/account/Purchase/$id"
-    | "/admin/BlogPost/$id"
-    | "/admin/Client/$id"
-    | "/admin/Order/$id"
-    | "/admin/Prescription/$id";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/Blogs'
+    | '/Branches'
+    | '/Cart'
+    | '/Checkout'
+    | '/Login'
+    | '/Prescription'
+    | '/Privacy'
+    | '/Products'
+    | '/Terms'
+    | '/Blog/$slug'
+    | '/Product/$id'
+    | '/account/Prescriptions'
+    | '/account/PreviouslyPurchased'
+    | '/account/Purchases'
+    | '/account/Transactions'
+    | '/account/Wishlist'
+    | '/admin/Account'
+    | '/admin/BlogPosts'
+    | '/admin/Branches'
+    | '/admin/Brands'
+    | '/admin/BulkUpload'
+    | '/admin/Carousel'
+    | '/admin/Clients'
+    | '/admin/Home-Sections'
+    | '/admin/Newsletter'
+    | '/admin/Orders'
+    | '/admin/PaymentTransactions'
+    | '/admin/Prescriptions'
+    | '/admin/ProductBulkOps'
+    | '/admin/ProductCategories'
+    | '/admin/Products'
+    | '/admin/Settings'
+    | '/account/'
+    | '/admin/'
+    | '/account/Prescription/$id'
+    | '/account/PrescriptionOrder/$id'
+    | '/account/Purchase/$id'
+    | '/admin/BlogPost/$id'
+    | '/admin/Client/$id'
+    | '/admin/Order/$id'
+    | '/admin/Prescription/$id'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/Blogs"
-    | "/Branches"
-    | "/Cart"
-    | "/Checkout"
-    | "/Login"
-    | "/Prescription"
-    | "/Privacy"
-    | "/Products"
-    | "/Terms"
-    | "/Blog/$slug"
-    | "/Product/$id"
-    | "/account/Prescriptions"
-    | "/account/PreviouslyPurchased"
-    | "/account/Purchases"
-    | "/account/Transactions"
-    | "/account/Wishlist"
-    | "/admin/Account"
-    | "/admin/BlogPosts"
-    | "/admin/Branches"
-    | "/admin/Brands"
-    | "/admin/BulkUpload"
-    | "/admin/Carousel"
-    | "/admin/Clients"
-    | "/admin/Home-Sections"
-    | "/admin/Newsletter"
-    | "/admin/Orders"
-    | "/admin/PaymentTransactions"
-    | "/admin/Prescriptions"
-    | "/admin/ProductBulkOps"
-    | "/admin/ProductCategories"
-    | "/admin/Products"
-    | "/admin/Settings"
-    | "/account"
-    | "/admin"
-    | "/account/Prescription/$id"
-    | "/account/PrescriptionOrder/$id"
-    | "/account/Purchase/$id"
-    | "/admin/BlogPost/$id"
-    | "/admin/Client/$id"
-    | "/admin/Order/$id"
-    | "/admin/Prescription/$id";
+    | '/'
+    | '/Blogs'
+    | '/Branches'
+    | '/Cart'
+    | '/Checkout'
+    | '/Login'
+    | '/Prescription'
+    | '/Privacy'
+    | '/Products'
+    | '/Terms'
+    | '/Blog/$slug'
+    | '/Product/$id'
+    | '/account/Prescriptions'
+    | '/account/PreviouslyPurchased'
+    | '/account/Purchases'
+    | '/account/Transactions'
+    | '/account/Wishlist'
+    | '/admin/Account'
+    | '/admin/BlogPosts'
+    | '/admin/Branches'
+    | '/admin/Brands'
+    | '/admin/BulkUpload'
+    | '/admin/Carousel'
+    | '/admin/Clients'
+    | '/admin/Home-Sections'
+    | '/admin/Newsletter'
+    | '/admin/Orders'
+    | '/admin/PaymentTransactions'
+    | '/admin/Prescriptions'
+    | '/admin/ProductBulkOps'
+    | '/admin/ProductCategories'
+    | '/admin/Products'
+    | '/admin/Settings'
+    | '/account'
+    | '/admin'
+    | '/account/Prescription/$id'
+    | '/account/PrescriptionOrder/$id'
+    | '/account/Purchase/$id'
+    | '/admin/BlogPost/$id'
+    | '/admin/Client/$id'
+    | '/admin/Order/$id'
+    | '/admin/Prescription/$id'
   id:
-    | "__root__"
-    | "/"
-    | "/account"
-    | "/admin"
-    | "/Blogs"
-    | "/Branches"
-    | "/Cart"
-    | "/Checkout"
-    | "/Login"
-    | "/Prescription"
-    | "/Privacy"
-    | "/Products"
-    | "/Terms"
-    | "/Blog/$slug"
-    | "/Product/$id"
-    | "/account/Prescriptions"
-    | "/account/PreviouslyPurchased"
-    | "/account/Purchases"
-    | "/account/Transactions"
-    | "/account/Wishlist"
-    | "/admin/Account"
-    | "/admin/BlogPosts"
-    | "/admin/Branches"
-    | "/admin/Brands"
-    | "/admin/BulkUpload"
-    | "/admin/Carousel"
-    | "/admin/Clients"
-    | "/admin/Home-Sections"
-    | "/admin/Newsletter"
-    | "/admin/Orders"
-    | "/admin/PaymentTransactions"
-    | "/admin/Prescriptions"
-    | "/admin/ProductBulkOps"
-    | "/admin/ProductCategories"
-    | "/admin/Products"
-    | "/admin/Settings"
-    | "/account/"
-    | "/admin/"
-    | "/account/Prescription/$id"
-    | "/account/PrescriptionOrder/$id"
-    | "/account/Purchase/$id"
-    | "/admin/BlogPost/$id"
-    | "/admin/Client/$id"
-    | "/admin/Order/$id"
-    | "/admin/Prescription/$id";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/Blogs'
+    | '/Branches'
+    | '/Cart'
+    | '/Checkout'
+    | '/Login'
+    | '/Prescription'
+    | '/Privacy'
+    | '/Products'
+    | '/Terms'
+    | '/Blog/$slug'
+    | '/Product/$id'
+    | '/account/Prescriptions'
+    | '/account/PreviouslyPurchased'
+    | '/account/Purchases'
+    | '/account/Transactions'
+    | '/account/Wishlist'
+    | '/admin/Account'
+    | '/admin/BlogPosts'
+    | '/admin/Branches'
+    | '/admin/Brands'
+    | '/admin/BulkUpload'
+    | '/admin/Carousel'
+    | '/admin/Clients'
+    | '/admin/Home-Sections'
+    | '/admin/Newsletter'
+    | '/admin/Orders'
+    | '/admin/PaymentTransactions'
+    | '/admin/Prescriptions'
+    | '/admin/ProductBulkOps'
+    | '/admin/ProductCategories'
+    | '/admin/Products'
+    | '/admin/Settings'
+    | '/account/'
+    | '/admin/'
+    | '/account/Prescription/$id'
+    | '/account/PrescriptionOrder/$id'
+    | '/account/Purchase/$id'
+    | '/admin/BlogPost/$id'
+    | '/admin/Client/$id'
+    | '/admin/Order/$id'
+    | '/admin/Prescription/$id'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AccountRouteRoute: typeof AccountRouteRouteWithChildren;
-  AdminRouteRoute: typeof AdminRouteRouteWithChildren;
-  BlogsRoute: typeof BlogsRoute;
-  BranchesRoute: typeof BranchesRoute;
-  CartRoute: typeof CartRoute;
-  CheckoutRoute: typeof CheckoutRoute;
-  LoginRoute: typeof LoginRoute;
-  PrescriptionRoute: typeof PrescriptionRoute;
-  PrivacyRoute: typeof PrivacyRoute;
-  ProductsRoute: typeof ProductsRoute;
-  TermsRoute: typeof TermsRoute;
-  BlogSlugRoute: typeof BlogSlugRoute;
-  ProductIdRoute: typeof ProductIdRoute;
+  IndexRoute: typeof IndexRoute
+  AccountRouteRoute: typeof AccountRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
+  BlogsRoute: typeof BlogsRoute
+  BranchesRoute: typeof BranchesRoute
+  CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
+  LoginRoute: typeof LoginRoute
+  PrescriptionRoute: typeof PrescriptionRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ProductsRoute: typeof ProductsRoute
+  TermsRoute: typeof TermsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  ProductIdRoute: typeof ProductIdRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/Terms": {
-      id: "/Terms";
-      path: "/Terms";
-      fullPath: "/Terms";
-      preLoaderRoute: typeof TermsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Products": {
-      id: "/Products";
-      path: "/Products";
-      fullPath: "/Products";
-      preLoaderRoute: typeof ProductsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Privacy": {
-      id: "/Privacy";
-      path: "/Privacy";
-      fullPath: "/Privacy";
-      preLoaderRoute: typeof PrivacyRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Prescription": {
-      id: "/Prescription";
-      path: "/Prescription";
-      fullPath: "/Prescription";
-      preLoaderRoute: typeof PrescriptionRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Login": {
-      id: "/Login";
-      path: "/Login";
-      fullPath: "/Login";
-      preLoaderRoute: typeof LoginRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Checkout": {
-      id: "/Checkout";
-      path: "/Checkout";
-      fullPath: "/Checkout";
-      preLoaderRoute: typeof CheckoutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Cart": {
-      id: "/Cart";
-      path: "/Cart";
-      fullPath: "/Cart";
-      preLoaderRoute: typeof CartRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Branches": {
-      id: "/Branches";
-      path: "/Branches";
-      fullPath: "/Branches";
-      preLoaderRoute: typeof BranchesRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Blogs": {
-      id: "/Blogs";
-      path: "/Blogs";
-      fullPath: "/Blogs";
-      preLoaderRoute: typeof BlogsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/admin": {
-      id: "/admin";
-      path: "/admin";
-      fullPath: "/admin";
-      preLoaderRoute: typeof AdminRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/account": {
-      id: "/account";
-      path: "/account";
-      fullPath: "/account";
-      preLoaderRoute: typeof AccountRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/admin/": {
-      id: "/admin/";
-      path: "/";
-      fullPath: "/admin/";
-      preLoaderRoute: typeof AdminIndexRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/account/": {
-      id: "/account/";
-      path: "/";
-      fullPath: "/account/";
-      preLoaderRoute: typeof AccountIndexRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/admin/Settings": {
-      id: "/admin/Settings";
-      path: "/Settings";
-      fullPath: "/admin/Settings";
-      preLoaderRoute: typeof AdminSettingsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Products": {
-      id: "/admin/Products";
-      path: "/Products";
-      fullPath: "/admin/Products";
-      preLoaderRoute: typeof AdminProductsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/ProductCategories": {
-      id: "/admin/ProductCategories";
-      path: "/ProductCategories";
-      fullPath: "/admin/ProductCategories";
-      preLoaderRoute: typeof AdminProductCategoriesRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Prescriptions": {
-      id: "/admin/Prescriptions";
-      path: "/Prescriptions";
-      fullPath: "/admin/Prescriptions";
-      preLoaderRoute: typeof AdminPrescriptionsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/PaymentTransactions": {
-      id: "/admin/PaymentTransactions";
-      path: "/PaymentTransactions";
-      fullPath: "/admin/PaymentTransactions";
-      preLoaderRoute: typeof AdminPaymentTransactionsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Orders": {
-      id: "/admin/Orders";
-      path: "/Orders";
-      fullPath: "/admin/Orders";
-      preLoaderRoute: typeof AdminOrdersRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Newsletter": {
-      id: "/admin/Newsletter";
-      path: "/Newsletter";
-      fullPath: "/admin/Newsletter";
-      preLoaderRoute: typeof AdminNewsletterRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Home-Sections": {
-      id: "/admin/Home-Sections";
-      path: "/Home-Sections";
-      fullPath: "/admin/Home-Sections";
-      preLoaderRoute: typeof AdminHomeSectionsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Clients": {
-      id: "/admin/Clients";
-      path: "/Clients";
-      fullPath: "/admin/Clients";
-      preLoaderRoute: typeof AdminClientsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Carousel": {
-      id: "/admin/Carousel";
-      path: "/Carousel";
-      fullPath: "/admin/Carousel";
-      preLoaderRoute: typeof AdminCarouselRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/BulkUpload": {
-      id: "/admin/BulkUpload";
-      path: "/BulkUpload";
-      fullPath: "/admin/BulkUpload";
-      preLoaderRoute: typeof AdminBulkUploadRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/ProductBulkOps": {
-      id: "/admin/ProductBulkOps";
-      path: "/ProductBulkOps";
-      fullPath: "/admin/ProductBulkOps";
-      preLoaderRoute: typeof AdminProductBulkOpsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Brands": {
-      id: "/admin/Brands";
-      path: "/Brands";
-      fullPath: "/admin/Brands";
-      preLoaderRoute: typeof AdminBrandsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Branches": {
-      id: "/admin/Branches";
-      path: "/Branches";
-      fullPath: "/admin/Branches";
-      preLoaderRoute: typeof AdminBranchesRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/BlogPosts": {
-      id: "/admin/BlogPosts";
-      path: "/BlogPosts";
-      fullPath: "/admin/BlogPosts";
-      preLoaderRoute: typeof AdminBlogPostsRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Account": {
-      id: "/admin/Account";
-      path: "/Account";
-      fullPath: "/admin/Account";
-      preLoaderRoute: typeof AdminAccountRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/account/Wishlist": {
-      id: "/account/Wishlist";
-      path: "/Wishlist";
-      fullPath: "/account/Wishlist";
-      preLoaderRoute: typeof AccountWishlistRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/account/Transactions": {
-      id: "/account/Transactions";
-      path: "/Transactions";
-      fullPath: "/account/Transactions";
-      preLoaderRoute: typeof AccountTransactionsRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/account/Purchases": {
-      id: "/account/Purchases";
-      path: "/Purchases";
-      fullPath: "/account/Purchases";
-      preLoaderRoute: typeof AccountPurchasesRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/account/PreviouslyPurchased": {
-      id: "/account/PreviouslyPurchased";
-      path: "/PreviouslyPurchased";
-      fullPath: "/account/PreviouslyPurchased";
-      preLoaderRoute: typeof AccountPreviouslyPurchasedRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/account/Prescriptions": {
-      id: "/account/Prescriptions";
-      path: "/Prescriptions";
-      fullPath: "/account/Prescriptions";
-      preLoaderRoute: typeof AccountPrescriptionsRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/Product/$id": {
-      id: "/Product/$id";
-      path: "/Product/$id";
-      fullPath: "/Product/$id";
-      preLoaderRoute: typeof ProductIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/Blog/$slug": {
-      id: "/Blog/$slug";
-      path: "/Blog/$slug";
-      fullPath: "/Blog/$slug";
-      preLoaderRoute: typeof BlogSlugRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/admin/Prescription/$id": {
-      id: "/admin/Prescription/$id";
-      path: "/Prescription/$id";
-      fullPath: "/admin/Prescription/$id";
-      preLoaderRoute: typeof AdminPrescriptionIdRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Order/$id": {
-      id: "/admin/Order/$id";
-      path: "/Order/$id";
-      fullPath: "/admin/Order/$id";
-      preLoaderRoute: typeof AdminOrderIdRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/Client/$id": {
-      id: "/admin/Client/$id";
-      path: "/Client/$id";
-      fullPath: "/admin/Client/$id";
-      preLoaderRoute: typeof AdminClientIdRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/admin/BlogPost/$id": {
-      id: "/admin/BlogPost/$id";
-      path: "/BlogPost/$id";
-      fullPath: "/admin/BlogPost/$id";
-      preLoaderRoute: typeof AdminBlogPostIdRouteImport;
-      parentRoute: typeof AdminRouteRoute;
-    };
-    "/account/Purchase/$id": {
-      id: "/account/Purchase/$id";
-      path: "/Purchase/$id";
-      fullPath: "/account/Purchase/$id";
-      preLoaderRoute: typeof AccountPurchaseIdRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/account/PrescriptionOrder/$id": {
-      id: "/account/PrescriptionOrder/$id";
-      path: "/PrescriptionOrder/$id";
-      fullPath: "/account/PrescriptionOrder/$id";
-      preLoaderRoute: typeof AccountPrescriptionOrderIdRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
-    "/account/Prescription/$id": {
-      id: "/account/Prescription/$id";
-      path: "/Prescription/$id";
-      fullPath: "/account/Prescription/$id";
-      preLoaderRoute: typeof AccountPrescriptionIdRouteImport;
-      parentRoute: typeof AccountRouteRoute;
-    };
+    '/Terms': {
+      id: '/Terms'
+      path: '/Terms'
+      fullPath: '/Terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Products': {
+      id: '/Products'
+      path: '/Products'
+      fullPath: '/Products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Privacy': {
+      id: '/Privacy'
+      path: '/Privacy'
+      fullPath: '/Privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Prescription': {
+      id: '/Prescription'
+      path: '/Prescription'
+      fullPath: '/Prescription'
+      preLoaderRoute: typeof PrescriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Login': {
+      id: '/Login'
+      path: '/Login'
+      fullPath: '/Login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Checkout': {
+      id: '/Checkout'
+      path: '/Checkout'
+      fullPath: '/Checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Cart': {
+      id: '/Cart'
+      path: '/Cart'
+      fullPath: '/Cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Branches': {
+      id: '/Branches'
+      path: '/Branches'
+      fullPath: '/Branches'
+      preLoaderRoute: typeof BranchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Blogs': {
+      id: '/Blogs'
+      path: '/Blogs'
+      fullPath: '/Blogs'
+      preLoaderRoute: typeof BlogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/admin/Settings': {
+      id: '/admin/Settings'
+      path: '/Settings'
+      fullPath: '/admin/Settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Products': {
+      id: '/admin/Products'
+      path: '/Products'
+      fullPath: '/admin/Products'
+      preLoaderRoute: typeof AdminProductsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/ProductCategories': {
+      id: '/admin/ProductCategories'
+      path: '/ProductCategories'
+      fullPath: '/admin/ProductCategories'
+      preLoaderRoute: typeof AdminProductCategoriesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/ProductBulkOps': {
+      id: '/admin/ProductBulkOps'
+      path: '/ProductBulkOps'
+      fullPath: '/admin/ProductBulkOps'
+      preLoaderRoute: typeof AdminProductBulkOpsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Prescriptions': {
+      id: '/admin/Prescriptions'
+      path: '/Prescriptions'
+      fullPath: '/admin/Prescriptions'
+      preLoaderRoute: typeof AdminPrescriptionsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/PaymentTransactions': {
+      id: '/admin/PaymentTransactions'
+      path: '/PaymentTransactions'
+      fullPath: '/admin/PaymentTransactions'
+      preLoaderRoute: typeof AdminPaymentTransactionsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Orders': {
+      id: '/admin/Orders'
+      path: '/Orders'
+      fullPath: '/admin/Orders'
+      preLoaderRoute: typeof AdminOrdersRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Newsletter': {
+      id: '/admin/Newsletter'
+      path: '/Newsletter'
+      fullPath: '/admin/Newsletter'
+      preLoaderRoute: typeof AdminNewsletterRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Home-Sections': {
+      id: '/admin/Home-Sections'
+      path: '/Home-Sections'
+      fullPath: '/admin/Home-Sections'
+      preLoaderRoute: typeof AdminHomeSectionsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Clients': {
+      id: '/admin/Clients'
+      path: '/Clients'
+      fullPath: '/admin/Clients'
+      preLoaderRoute: typeof AdminClientsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Carousel': {
+      id: '/admin/Carousel'
+      path: '/Carousel'
+      fullPath: '/admin/Carousel'
+      preLoaderRoute: typeof AdminCarouselRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/BulkUpload': {
+      id: '/admin/BulkUpload'
+      path: '/BulkUpload'
+      fullPath: '/admin/BulkUpload'
+      preLoaderRoute: typeof AdminBulkUploadRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Brands': {
+      id: '/admin/Brands'
+      path: '/Brands'
+      fullPath: '/admin/Brands'
+      preLoaderRoute: typeof AdminBrandsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Branches': {
+      id: '/admin/Branches'
+      path: '/Branches'
+      fullPath: '/admin/Branches'
+      preLoaderRoute: typeof AdminBranchesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/BlogPosts': {
+      id: '/admin/BlogPosts'
+      path: '/BlogPosts'
+      fullPath: '/admin/BlogPosts'
+      preLoaderRoute: typeof AdminBlogPostsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Account': {
+      id: '/admin/Account'
+      path: '/Account'
+      fullPath: '/admin/Account'
+      preLoaderRoute: typeof AdminAccountRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/account/Wishlist': {
+      id: '/account/Wishlist'
+      path: '/Wishlist'
+      fullPath: '/account/Wishlist'
+      preLoaderRoute: typeof AccountWishlistRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/Transactions': {
+      id: '/account/Transactions'
+      path: '/Transactions'
+      fullPath: '/account/Transactions'
+      preLoaderRoute: typeof AccountTransactionsRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/Purchases': {
+      id: '/account/Purchases'
+      path: '/Purchases'
+      fullPath: '/account/Purchases'
+      preLoaderRoute: typeof AccountPurchasesRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/PreviouslyPurchased': {
+      id: '/account/PreviouslyPurchased'
+      path: '/PreviouslyPurchased'
+      fullPath: '/account/PreviouslyPurchased'
+      preLoaderRoute: typeof AccountPreviouslyPurchasedRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/Prescriptions': {
+      id: '/account/Prescriptions'
+      path: '/Prescriptions'
+      fullPath: '/account/Prescriptions'
+      preLoaderRoute: typeof AccountPrescriptionsRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/Product/$id': {
+      id: '/Product/$id'
+      path: '/Product/$id'
+      fullPath: '/Product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Blog/$slug': {
+      id: '/Blog/$slug'
+      path: '/Blog/$slug'
+      fullPath: '/Blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/Prescription/$id': {
+      id: '/admin/Prescription/$id'
+      path: '/Prescription/$id'
+      fullPath: '/admin/Prescription/$id'
+      preLoaderRoute: typeof AdminPrescriptionIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Order/$id': {
+      id: '/admin/Order/$id'
+      path: '/Order/$id'
+      fullPath: '/admin/Order/$id'
+      preLoaderRoute: typeof AdminOrderIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/Client/$id': {
+      id: '/admin/Client/$id'
+      path: '/Client/$id'
+      fullPath: '/admin/Client/$id'
+      preLoaderRoute: typeof AdminClientIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/BlogPost/$id': {
+      id: '/admin/BlogPost/$id'
+      path: '/BlogPost/$id'
+      fullPath: '/admin/BlogPost/$id'
+      preLoaderRoute: typeof AdminBlogPostIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/account/Purchase/$id': {
+      id: '/account/Purchase/$id'
+      path: '/Purchase/$id'
+      fullPath: '/account/Purchase/$id'
+      preLoaderRoute: typeof AccountPurchaseIdRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/PrescriptionOrder/$id': {
+      id: '/account/PrescriptionOrder/$id'
+      path: '/PrescriptionOrder/$id'
+      fullPath: '/account/PrescriptionOrder/$id'
+      preLoaderRoute: typeof AccountPrescriptionOrderIdRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/Prescription/$id': {
+      id: '/account/Prescription/$id'
+      path: '/Prescription/$id'
+      fullPath: '/account/Prescription/$id'
+      preLoaderRoute: typeof AccountPrescriptionIdRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
   }
 }
 
 interface AccountRouteRouteChildren {
-  AccountPrescriptionsRoute: typeof AccountPrescriptionsRoute;
-  AccountPreviouslyPurchasedRoute: typeof AccountPreviouslyPurchasedRoute;
-  AccountPurchasesRoute: typeof AccountPurchasesRoute;
-  AccountTransactionsRoute: typeof AccountTransactionsRoute;
-  AccountWishlistRoute: typeof AccountWishlistRoute;
-  AccountIndexRoute: typeof AccountIndexRoute;
-  AccountPrescriptionIdRoute: typeof AccountPrescriptionIdRoute;
-  AccountPrescriptionOrderIdRoute: typeof AccountPrescriptionOrderIdRoute;
-  AccountPurchaseIdRoute: typeof AccountPurchaseIdRoute;
+  AccountPrescriptionsRoute: typeof AccountPrescriptionsRoute
+  AccountPreviouslyPurchasedRoute: typeof AccountPreviouslyPurchasedRoute
+  AccountPurchasesRoute: typeof AccountPurchasesRoute
+  AccountTransactionsRoute: typeof AccountTransactionsRoute
+  AccountWishlistRoute: typeof AccountWishlistRoute
+  AccountIndexRoute: typeof AccountIndexRoute
+  AccountPrescriptionIdRoute: typeof AccountPrescriptionIdRoute
+  AccountPrescriptionOrderIdRoute: typeof AccountPrescriptionOrderIdRoute
+  AccountPurchaseIdRoute: typeof AccountPurchaseIdRoute
 }
 
 const AccountRouteRouteChildren: AccountRouteRouteChildren = {
@@ -905,34 +906,34 @@ const AccountRouteRouteChildren: AccountRouteRouteChildren = {
   AccountPrescriptionIdRoute: AccountPrescriptionIdRoute,
   AccountPrescriptionOrderIdRoute: AccountPrescriptionOrderIdRoute,
   AccountPurchaseIdRoute: AccountPurchaseIdRoute,
-};
+}
 
 const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(
   AccountRouteRouteChildren,
-);
+)
 
 interface AdminRouteRouteChildren {
-  AdminAccountRoute: typeof AdminAccountRoute;
-  AdminBlogPostsRoute: typeof AdminBlogPostsRoute;
-  AdminBranchesRoute: typeof AdminBranchesRoute;
-  AdminBrandsRoute: typeof AdminBrandsRoute;
-  AdminBulkUploadRoute: typeof AdminBulkUploadRoute;
-  AdminCarouselRoute: typeof AdminCarouselRoute;
-  AdminClientsRoute: typeof AdminClientsRoute;
-  AdminHomeSectionsRoute: typeof AdminHomeSectionsRoute;
-  AdminNewsletterRoute: typeof AdminNewsletterRoute;
-  AdminOrdersRoute: typeof AdminOrdersRoute;
-  AdminPaymentTransactionsRoute: typeof AdminPaymentTransactionsRoute;
-  AdminPrescriptionsRoute: typeof AdminPrescriptionsRoute;
-  AdminProductBulkOpsRoute: typeof AdminProductBulkOpsRoute;
-  AdminProductCategoriesRoute: typeof AdminProductCategoriesRoute;
-  AdminProductsRoute: typeof AdminProductsRoute;
-  AdminSettingsRoute: typeof AdminSettingsRoute;
-  AdminIndexRoute: typeof AdminIndexRoute;
-  AdminBlogPostIdRoute: typeof AdminBlogPostIdRoute;
-  AdminClientIdRoute: typeof AdminClientIdRoute;
-  AdminOrderIdRoute: typeof AdminOrderIdRoute;
-  AdminPrescriptionIdRoute: typeof AdminPrescriptionIdRoute;
+  AdminAccountRoute: typeof AdminAccountRoute
+  AdminBlogPostsRoute: typeof AdminBlogPostsRoute
+  AdminBranchesRoute: typeof AdminBranchesRoute
+  AdminBrandsRoute: typeof AdminBrandsRoute
+  AdminBulkUploadRoute: typeof AdminBulkUploadRoute
+  AdminCarouselRoute: typeof AdminCarouselRoute
+  AdminClientsRoute: typeof AdminClientsRoute
+  AdminHomeSectionsRoute: typeof AdminHomeSectionsRoute
+  AdminNewsletterRoute: typeof AdminNewsletterRoute
+  AdminOrdersRoute: typeof AdminOrdersRoute
+  AdminPaymentTransactionsRoute: typeof AdminPaymentTransactionsRoute
+  AdminPrescriptionsRoute: typeof AdminPrescriptionsRoute
+  AdminProductBulkOpsRoute: typeof AdminProductBulkOpsRoute
+  AdminProductCategoriesRoute: typeof AdminProductCategoriesRoute
+  AdminProductsRoute: typeof AdminProductsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminBlogPostIdRoute: typeof AdminBlogPostIdRoute
+  AdminClientIdRoute: typeof AdminClientIdRoute
+  AdminOrderIdRoute: typeof AdminOrderIdRoute
+  AdminPrescriptionIdRoute: typeof AdminPrescriptionIdRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
@@ -957,11 +958,11 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminClientIdRoute: AdminClientIdRoute,
   AdminOrderIdRoute: AdminOrderIdRoute,
   AdminPrescriptionIdRoute: AdminPrescriptionIdRoute,
-};
+}
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
   AdminRouteRouteChildren,
-);
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -978,7 +979,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   BlogSlugRoute: BlogSlugRoute,
   ProductIdRoute: ProductIdRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

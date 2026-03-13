@@ -716,7 +716,7 @@ function RouteComponent() {
                   {hasMore && (
                     <div className="flex justify-center mt-6">
                       <Button
-                        variant="outline"
+                        className="bg-accent text-accent-foreground"
                         onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                       >
                         Load more ({filtered.length - visibleCount} remaining)
