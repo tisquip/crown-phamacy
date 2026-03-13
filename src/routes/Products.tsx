@@ -414,6 +414,25 @@ function RouteComponent() {
     return sorted;
   }, [products, searchParams]);
 
+  // ── Load-more pagination ────────────────────────────────────────────
+  const PAGE_SIZE = 15;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // Reset to first page whenever filters change
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [
+    searchParams.search,
+    searchParams.category,
+    searchParams.brand,
+    searchParams.sort,
+    searchParams.inStock,
+    searchParams.onPromo,
+  ]);
+
+  const visibleProducts = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
+
   const activeCategoryName = searchParams.category
     ? categoryMap.get(searchParams.category)
     : undefined;
@@ -689,10 +708,21 @@ function RouteComponent() {
               ) : (
                 <>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {filtered.map((product) => (
+                    {visibleProducts.map((product) => (
                       <RealProductCard key={product._id} product={product} />
                     ))}
                   </div>
+
+                  {hasMore && (
+                    <div className="flex justify-center mt-6">
+                      <Button
+                        variant="outline"
+                        onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                      >
+                        Load more ({filtered.length - visibleCount} remaining)
+                      </Button>
+                    </div>
+                  )}
 
                   {filtered.length === 0 && (
                     <div className="text-center py-16">

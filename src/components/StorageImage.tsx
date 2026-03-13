@@ -45,6 +45,7 @@ export function StorageImage({
     <img
       src={src}
       alt={alt}
+      loading="lazy"
       className={cn("object-cover", className)}
       onError={(e) => {
         const img = e.currentTarget;
