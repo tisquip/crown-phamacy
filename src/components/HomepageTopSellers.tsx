@@ -3,6 +3,8 @@ import { api } from "../../convex/_generated/api";
 import ConvexProductCarousel from "./ConvexProductCarousel";
 import { useState, useEffect } from "react";
 import type { FunctionReturnType } from "convex/server";
+import { ProductDetailModal } from "./ProductDetailModal";
+import { Id } from "../../convex/_generated/dataModel";
 
 /**
  * Homepage "Top Sellers" section.
@@ -10,6 +12,8 @@ import type { FunctionReturnType } from "convex/server";
  */
 export default function HomepageTopSellers() {
   const convex = useConvex();
+  const [selectedProductId, setSelectedProductId] =
+    useState<Id<"products"> | null>(null);
   const [sectionProducts, setSectionProducts] = useState<
     | FunctionReturnType<typeof api.userFns.homepage.getSectionProducts>
     | undefined
@@ -45,10 +49,17 @@ export default function HomepageTopSellers() {
       : fallbackProducts;
 
   return (
-    <ConvexProductCarousel
-      title="Top Sellers"
-      products={products}
-      viewMoreLink="/products"
-    />
+    <>
+      <ConvexProductCarousel
+        title="Top Sellers"
+        products={products}
+        viewMoreLink="/products"
+        onQuickView={setSelectedProductId}
+      />
+      <ProductDetailModal
+        productId={selectedProductId}
+        onClose={() => setSelectedProductId(null)}
+      />
+    </>
   );
 }

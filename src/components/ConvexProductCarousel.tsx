@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef } from "react";
 import { Skeleton } from "./ui/skeleton";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc, Id } from "../../convex/_generated/dataModel";
 import ProductCard from "./ProductCard";
 
 type ConvexProduct = Doc<"products"> & {
@@ -14,6 +14,7 @@ interface ConvexProductCarouselProps {
   title: string;
   products: ConvexProduct[] | undefined;
   viewMoreLink?: string;
+  onQuickView?: (id: Id<"products">) => void;
 }
 
 /**
@@ -24,6 +25,7 @@ export default function ConvexProductCarousel({
   title,
   products,
   viewMoreLink,
+  onQuickView,
 }: ConvexProductCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -100,7 +102,11 @@ export default function ConvexProductCarousel({
         >
           {products.map((product) => (
             <div key={product._id} className="min-w-[255px] max-w-[255px]">
-              <ProductCard product={product} compact />
+              <ProductCard
+                product={product}
+                compact
+                onQuickView={onQuickView}
+              />
             </div>
           ))}
         </div>

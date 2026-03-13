@@ -6,6 +6,8 @@ import { formatPrice } from "@/lib/formatPrice";
 import { Skeleton } from "./ui/skeleton";
 import { useState, useEffect } from "react";
 import type { FunctionReturnType } from "convex/server";
+import { ProductDetailModal } from "./ProductDetailModal";
+import { Id } from "../../convex/_generated/dataModel";
 
 /**
  * Homepage deal sections showing promo-banner products in a grid.
@@ -13,6 +15,8 @@ import type { FunctionReturnType } from "convex/server";
  */
 export default function HomepagePromoDeals() {
   const convex = useConvex();
+  const [selectedProductId, setSelectedProductId] =
+    useState<Id<"products"> | null>(null);
   const [products, setProducts] = useState<
     | FunctionReturnType<typeof api.userFns.homepage.getSectionProducts>
     | undefined
@@ -63,20 +67,35 @@ export default function HomepagePromoDeals() {
   const rightProducts = products.slice(half);
 
   return (
-    <div className="grid md:grid-cols-2 gap-6 py-6">
-      {leftProducts.length > 0 && (
-        <DealPanel title="Featured Deals" products={leftProducts} />
-      )}
-      {rightProducts.length > 0 && (
-        <DealPanel title="More Great Deals" products={rightProducts} />
-      )}
-    </div>
+    <>
+      <div className="grid md:grid-cols-2 gap-6 py-6">
+        {leftProducts.length > 0 && (
+          <DealPanel
+            title="Featured Deals"
+            products={leftProducts}
+            onQuickView={(id) => setSelectedProductId(id as Id<"products">)}
+          />
+        )}
+        {rightProducts.length > 0 && (
+          <DealPanel
+            title="More Great Deals"
+            products={rightProducts}
+            onQuickView={(id) => setSelectedProductId(id as Id<"products">)}
+          />
+        )}
+      </div>
+      <ProductDetailModal
+        productId={selectedProductId}
+        onClose={() => setSelectedProductId(null)}
+      />
+    </>
   );
 }
 
 function DealPanel({
   title,
   products,
+  onQuickView,
 }: {
   title: string;
   products: Array<{
@@ -87,6 +106,7 @@ function DealPanel({
     retailPriceInUSDCents: number;
     promotionPriceInUSDCents?: number;
   }>;
+  onQuickView: (id: string) => void;
 }) {
   return (
     <div className="border border-border rounded-lg p-4">
@@ -106,7 +126,11 @@ function DealPanel({
             p.promotionPriceInUSDCents ?? p.retailPriceInUSDCents;
           return (
             <div key={p._id} className="text-center">
-              <Link to={`/product/${p._id}`}>
+              <button
+                onClick={() => onQuickView(p._id)}
+                className="w-full text-left"
+                aria-label={`Quick view ${p.name}`}
+              >
                 <StorageImage
                   storageId={firstImageId}
                   alt={p.name}
@@ -123,7 +147,7 @@ function DealPanel({
                 <p className="price-text text-xs mt-1">
                   {formatPrice(displayPrice)}
                 </p>
-              </Link>
+              </button>
             </div>
           );
         })}
